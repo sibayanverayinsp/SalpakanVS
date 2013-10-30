@@ -2,7 +2,6 @@ package com.salpakan.ui.views;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -98,8 +97,8 @@ public class GameLobbyView extends JPanel {
 		final JPanel showCapturedRoom = initRoom(Constants.SHOW_CAPTURED);
 		final JPanel theBattlefieldRoom = initRoom(Constants.BATTLEFIELD);
 		
+		ComponentUtils.setSize(roomPanel, 0, Constants.WINDOW_HEIGHT / 4);
 		roomPanel.setLayout(new BoxLayout(roomPanel, BoxLayout.X_AXIS));
-		roomPanel.setPreferredSize(new Dimension(0, Constants.WINDOW_HEIGHT / 4));
 		roomPanel.add(defaultRoom);
 		roomPanel.add(showEngagedRoom);
 		roomPanel.add(showCapturedRoom);
@@ -118,9 +117,9 @@ public class GameLobbyView extends JPanel {
 		final JScrollPane scrollPane = new JScrollPane();
 		final RoomListModel roomListModel = new RoomListModel();
 		
-		ComponentUtils.customButton(createButton);
-		ComponentUtils.customButton(joinButton);
-		ComponentUtils.customButton(cancelButton);
+		ComponentUtils.setCustomButton(createButton);
+		ComponentUtils.setCustomButton(joinButton);
+		ComponentUtils.setCustomButton(cancelButton);
 
 		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
 		buttonContainer.add(createButton);
@@ -133,8 +132,8 @@ public class GameLobbyView extends JPanel {
 		joinButton.addActionListener(new JoinButtonActionListener(roomListModel, list));
 		cancelButton.addActionListener(new CancelButtonActionListener(roomListModel, list));
 		
+		ComponentUtils.setSize(scrollPane, 120, 90);
 		scrollPane.setViewportView(list);
-		scrollPane.setPreferredSize(new Dimension(120, 90));
 
 		room.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), roomName.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
 		room.add(scrollPane);
@@ -150,7 +149,7 @@ public class GameLobbyView extends JPanel {
 	private void initPlayersPanel() {
 		final JPanel playersPanel = new JPanel();
 
-		playersPanel.setPreferredSize(new Dimension(Constants.WINDOW_WIDTH / 5, 0));
+		ComponentUtils.setSize(playersPanel, Constants.WINDOW_WIDTH / 5, 0);
 		playersPanel.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Players".toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
 		
 		this.add(playersPanel, BorderLayout.WEST);
@@ -161,10 +160,8 @@ public class GameLobbyView extends JPanel {
 		chatArea = new JTextArea();
 
 		chatArea.setColumns(50);
-		chatArea.setRows(50);
-		chatArea.setPreferredSize(new Dimension(50, 50));
-		
-		chatPanel.setPreferredSize(new Dimension(Constants.WINDOW_WIDTH / 3, 0));
+		chatArea.setRows(20);
+
 		chatPanel.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Chat".toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
 		chatPanel.add(chatArea);
 		
@@ -174,7 +171,7 @@ public class GameLobbyView extends JPanel {
 	private void initHelpPanel() {
 		final JPanel helpPanel = new JPanel();
 		
-		helpPanel.setPreferredSize(new Dimension(Constants.WINDOW_WIDTH / 4, 0));
+		ComponentUtils.setSize(helpPanel, Constants.WINDOW_WIDTH / 4, 0);
 		helpPanel.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), "Instructions".toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
 		
 		this.add(helpPanel, BorderLayout.EAST);

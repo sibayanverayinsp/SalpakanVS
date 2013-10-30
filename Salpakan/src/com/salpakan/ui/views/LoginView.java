@@ -2,7 +2,6 @@ package com.salpakan.ui.views;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -79,22 +78,20 @@ public class LoginView extends JPanel {
 	private void initLoginPanel() {
 		loginPanel = new JPanel(new GridBagLayout());
 		final GridBagConstraints constraints = new GridBagConstraints();
-		final Dimension loginDimension = new Dimension(350, 250);
 		final JLabel usernameLabel = new JLabel(Constants.USERNAME);
 		final JLabel passwordLabel = new JLabel(Constants.PASSWORD);
 		username = new JTextField();
 		password = new JPasswordField();
 		final JButton loginButton = new JButton(Constants.LOGIN_BUTTON);
 		
-		ComponentUtils.customTextfield(username);
-		ComponentUtils.customTextfield(password);
-		ComponentUtils.customButton(loginButton);
+		ComponentUtils.setCustomTextfield(username);
+		ComponentUtils.setCustomTextfield(password);
+		ComponentUtils.setCustomButton(loginButton);
 		
 		loginButton.addActionListener(new LoginActionListener());
 		
 		//init login panel
-		loginPanel.setMaximumSize(loginDimension);
-		loginPanel.setPreferredSize(loginDimension);
+		ComponentUtils.setSize(loginPanel, 350, 250);
 		loginPanel.setBorder(BorderFactory.createCompoundBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), Constants.LOGIN_BUTTON.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Font.SANS_SERIF, Font.BOLD, 15)), Constants.PADDING));
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;

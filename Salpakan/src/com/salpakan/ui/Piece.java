@@ -2,8 +2,11 @@ package com.salpakan.ui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+
+import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
 public class Piece extends JPanel {
@@ -15,9 +18,7 @@ public class Piece extends JPanel {
 	public Piece(final ImageIcon icon) {
 		this.piece = this;
 		this.icon = icon;
-		final Dimension iconSize = this.getIconSize();
-		this.setPreferredSize(iconSize);
-		this.setMaximumSize(iconSize);
+		ComponentUtils.setSize(this, this.getIconSize());
 	}
 	
 	private Dimension getIconSize() {

@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EtchedBorder;
 
 import com.salpakan.constants.Constants;
+import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
 public class Board extends JPanel {
@@ -29,9 +30,9 @@ public class Board extends JPanel {
 		for (int i = 0; i < this.row; i++) {
 			for (int j = 0; j < this.column; j++) {
 				grid[i][j] = new JPanel();
+				
+				ComponentUtils.setSize(grid[i][j], Constants.GRID_SIZE);
 				grid[i][j].setLayout(new BorderLayout());
-				grid[i][j].setPreferredSize(Constants.GRID_SIZE);
-				grid[i][j].setMaximumSize(Constants.GRID_SIZE);
 				grid[i][j].setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 				this.add(grid[i][j]);
 			}
