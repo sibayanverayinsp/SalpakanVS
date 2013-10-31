@@ -1,9 +1,13 @@
 package com.salpakan.ui.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -153,8 +157,12 @@ public class GameLobbyView extends JPanel {
 		final JTextField chatField = new JTextField();
 		chatArea = new JTextArea();
 		
+		chatArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		chatArea.setEditable(false);
+		chatArea.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
 		chatArea.setColumns(48);
-		chatArea.setRows(21);
+		chatArea.setRows(16);
+		chatField.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
 		chatField.setColumns(42);
 		
 		chatContainer.setLayout(new BorderLayout());
