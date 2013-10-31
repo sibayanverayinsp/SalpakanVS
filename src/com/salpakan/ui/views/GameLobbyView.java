@@ -6,16 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.ui.components.RoomListModel;
@@ -135,7 +131,7 @@ public class GameLobbyView extends JPanel {
 		ComponentUtils.setSize(scrollPane, 120, 90);
 		scrollPane.setViewportView(list);
 
-		room.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), roomName.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
+		ComponentUtils.setPanelBorder(room, roomName);
 		room.add(scrollPane);
 		room.add(buttonContainer);
 		
@@ -150,7 +146,7 @@ public class GameLobbyView extends JPanel {
 		final JPanel playersPanel = new JPanel();
 
 		ComponentUtils.setSize(playersPanel, Constants.WINDOW_WIDTH / 5, 0);
-		playersPanel.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), Constants.PLAYERS.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
+		ComponentUtils.setPanelBorder(playersPanel, Constants.PLAYERS);
 		
 		this.add(playersPanel, BorderLayout.WEST);
 	}
@@ -162,7 +158,7 @@ public class GameLobbyView extends JPanel {
 		chatArea.setColumns(50);
 		chatArea.setRows(20);
 
-		chatPanel.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), Constants.CHAT.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
+		ComponentUtils.setPanelBorder(chatPanel, Constants.CHAT);
 		chatPanel.add(chatArea);
 		
 		this.add(chatPanel, BorderLayout.CENTER);
@@ -172,7 +168,7 @@ public class GameLobbyView extends JPanel {
 		final JPanel helpPanel = new JPanel();
 		
 		ComponentUtils.setSize(helpPanel, Constants.WINDOW_WIDTH / 4, 0);
-		helpPanel.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), Constants.INSTRUCTIONS.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
+		ComponentUtils.setPanelBorder(helpPanel, Constants.INSTRUCTIONS);
 		
 		this.add(helpPanel, BorderLayout.EAST);
 	}
