@@ -47,7 +47,7 @@ public class TabView extends JPanel {
 		tabbedPane.addTab(Constants.BOARD, gamePanel);
 		tabbedPane.addTab(Constants.ABOUT, aboutPanel);
 		
-		ComponentUtils.customButton(logoutButton);
+		ComponentUtils.setCustomButton(logoutButton);
 		logoutButton.addActionListener(new LogoutButtonActionListener());
 		
 		logoutPanel.add(logoutButton, BorderLayout.EAST);
