@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
-
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -137,10 +135,6 @@ public class GameLobbyView extends JPanel {
 		room.add(buttonContainer);
 		
 		return room;
-	}
-	
-	public void addData(final Vector<String> data) {
-		data.add("amp");
 	}
 	
 	private void initPlayersPanel() {
