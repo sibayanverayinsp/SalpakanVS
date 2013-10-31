@@ -12,6 +12,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.ui.components.RoomListModel;
@@ -75,7 +77,6 @@ public class GameLobbyView extends JPanel {
 		}
 	}
 	
-	private JPanel chatPanel;
 	private JTextArea chatArea;
 
 	public GameLobbyView() {
@@ -152,14 +153,23 @@ public class GameLobbyView extends JPanel {
 	}
 	
 	private void initChatPanel() {
-		chatPanel = new JPanel();
+		final Container chatContainer = new Container();
+		final JButton sendButton = new JButton(Constants.SEND_BUTTON);
+		final JPanel chatPanel = new JPanel();
+		final JTextField chatField = new JTextField();
 		chatArea = new JTextArea();
-
-		chatArea.setColumns(50);
-		chatArea.setRows(20);
-
+		
+		chatArea.setColumns(48);
+		chatArea.setRows(21);
+		chatField.setColumns(42);
+		
+		chatContainer.setLayout(new BorderLayout());
+		chatContainer.add(chatField, BorderLayout.WEST);
+		chatContainer.add(sendButton, BorderLayout.EAST);
+		
 		ComponentUtils.setPanelBorder(chatPanel, Constants.CHAT);
 		chatPanel.add(chatArea);
+		chatPanel.add(chatContainer);
 		
 		this.add(chatPanel, BorderLayout.CENTER);
 	}

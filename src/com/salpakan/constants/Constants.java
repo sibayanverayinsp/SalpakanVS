@@ -2,8 +2,6 @@ package com.salpakan.constants;
 
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.awt.Toolkit;
-
 import javax.swing.border.EmptyBorder;
 
 public final class Constants {
@@ -11,11 +9,8 @@ public final class Constants {
 	/*
 	 * 		Screen Stuffs
 	 */
-	public static final Dimension SCREEN = Toolkit.getDefaultToolkit().getScreenSize();
-	public static final int SCREEN_WIDTH = (int) SCREEN.getWidth();
-	public static final int SCREEN_HEIGHT = (int) SCREEN.getHeight();
-	public static final int WINDOW_WIDTH = SCREEN_WIDTH - 300;
-	public static final int WINDOW_HEIGHT = SCREEN_HEIGHT - 100;
+	public static final int WINDOW_WIDTH = 1060;
+	public static final int WINDOW_HEIGHT = 660;
 	
 	/*
 	 * 		Networking Stuffs
@@ -54,6 +49,7 @@ public final class Constants {
 	public static final String CREATE_BUTTON = "Create";
 	public static final String JOIN_BUTTON = "Join";
 	public static final String CANCEL_BUTTON = "Cancel";
+	public static final String SEND_BUTTON = "Send";
 	
 	/*
 	 * 		Label Strings
