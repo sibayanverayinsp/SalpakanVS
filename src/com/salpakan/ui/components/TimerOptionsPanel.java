@@ -17,9 +17,9 @@ public class TimerOptionsPanel extends JPanel implements ActionListener {
 	private int selectedTime;
 	
 	public TimerOptionsPanel() {
-		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		this.initTimeMap();
-		this.initTimerPanel();
+		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		initTimeMap();
+		initTimerPanel();
 	}
 	
 	@Override
@@ -67,7 +67,7 @@ public class TimerOptionsPanel extends JPanel implements ActionListener {
 
 	private void addRadioButton(final ButtonGroup buttonGroup, final JRadioButton radioButton) {
 		buttonGroup.add(radioButton);
-		this.add(radioButton);
+		add(radioButton);
 	}
 	
 	public int getSelectedTime() {

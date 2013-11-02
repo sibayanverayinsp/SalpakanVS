@@ -16,7 +16,7 @@ public final class Constants {
 	 * 		Networking Stuffs
 	 */
 	public static final int SOCKET_TIMEOUT = 100;
-	public static final int PORT = 1500;
+	public static final int DEFAULT_PORT = 1500;
 	
 	/*
 	 *		Game states
@@ -40,6 +40,7 @@ public final class Constants {
 	public static final String PLAYERS = "Players";
 	public static final String CHAT = "Chat";
 	public static final String INSTRUCTIONS = "Instructions";
+	public static final String LOGS = "Logs";
 
 	/*
 	 * 		Button Strings
@@ -85,6 +86,17 @@ public final class Constants {
 	public static final String ERROR = "Error!";
 	public static final String FIELDS_REQUIRED = "All fields are required!";
 	public static final String SERVER_CRASHED = "Server crashed!";
+	public static final String INVALID_PORT = "Invalid port number!";
+	
+	/*
+	 * 		Server Strings
+	 */
+	public static final String PORT = "Port";
+	public static final String START = "Start";
+	public static final String STOP = "Stop";
+	public static final String SERVER = "Server";
+	public static final String SERVER_STARTED = "Server started!";
+	public static final String SERVER_STOPPED = "Server stopped!";
 	
 	/*
 	 * 		Timer Strings

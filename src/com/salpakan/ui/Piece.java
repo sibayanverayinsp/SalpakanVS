@@ -13,21 +13,18 @@ public class Piece extends JPanel {
 
 	private ImageIcon icon;
 	
-	private JPanel piece;
-	
 	public Piece(final ImageIcon icon) {
-		this.piece = this;
 		this.icon = icon;
-		ComponentUtils.setSize(this, this.getIconSize());
+		ComponentUtils.setSize(this, getIconSize());
 	}
 	
 	private Dimension getIconSize() {
-		return new Dimension(this.icon.getIconWidth(), this.icon.getIconWidth());
+		return new Dimension(icon.getIconWidth(), icon.getIconWidth());
 	}
 	
 	public void paintComponent(final Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(this.icon.getImage(), 0, 0, getWidth(), getHeight(), this);
+		g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), this);
 	}
 
 }

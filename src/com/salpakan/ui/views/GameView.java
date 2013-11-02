@@ -18,20 +18,20 @@ public class GameView extends JPanel {
 	private Board oppBase;
 	
 	public GameView() {
-		this.setLayout(new BorderLayout());
-		this.initGameView();
+		setLayout(new BorderLayout());
+		initGameView();
 	}
 	
 	private void initGameView() {
 		final Box gameBox = new Box(BoxLayout.Y_AXIS);
 		
-		this.initGamePanel();
+		initGamePanel();
 		
 		gameBox.add(Box.createVerticalGlue());
 		gameBox.add(gamePanel);
 		gameBox.add(Box.createVerticalGlue());
 		
-		this.add(gameBox, BorderLayout.CENTER);
+		add(gameBox, BorderLayout.CENTER);
 	}
 	
 	private void initGamePanel() {

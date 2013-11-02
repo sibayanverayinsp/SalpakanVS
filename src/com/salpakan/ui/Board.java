@@ -20,21 +20,21 @@ public class Board extends JPanel {
 	public Board(int row, int column) {
 		this.row = row;
 		this.column = column;
-		this.setLayout(new GridLayout(this.row, this.column));
-		this.initBoard();
-		this.setBorder(Constants.MARGIN);
+		setLayout(new GridLayout(row, column));
+		initBoard();
+		setBorder(Constants.MARGIN);
 	}
 	
 	private void initBoard() {
-		grid = new JPanel[this.row][this.column];
-		for (int i = 0; i < this.row; i++) {
-			for (int j = 0; j < this.column; j++) {
+		grid = new JPanel[row][column];
+		for (int i = 0; i < row; i++) {
+			for (int j = 0; j < column; j++) {
 				grid[i][j] = new JPanel();
 				
 				ComponentUtils.setSize(grid[i][j], Constants.GRID_SIZE);
 				grid[i][j].setLayout(new BorderLayout());
 				grid[i][j].setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-				this.add(grid[i][j]);
+				add(grid[i][j]);
 			}
 		}
 	}

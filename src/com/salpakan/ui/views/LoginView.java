@@ -58,21 +58,21 @@ public class LoginView extends JPanel {
 	private JPasswordField password;
 	
 	public LoginView() {
-		this.setLayout(new BorderLayout());
-		this.initLoginView();
+		setLayout(new BorderLayout());
+		initLoginView();
 	}
 	
 	private void initLoginView() {
 		final Box loginBox = new Box(BoxLayout.Y_AXIS);
 		
-		this.initLoginPanel();
+		initLoginPanel();
 		
 		//init login box
 		loginBox.add(Box.createVerticalGlue());
 		loginBox.add(loginPanel);
 		loginBox.add(Box.createVerticalGlue());
 
-		this.add(loginBox, BorderLayout.CENTER);
+		add(loginBox, BorderLayout.CENTER);
 	}
 	
 	private void initLoginPanel() {

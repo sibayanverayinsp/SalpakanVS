@@ -30,8 +30,8 @@ public class TabView extends JPanel {
 	private GameLobbyView lobbyPanel;
 
 	public TabView() {
-		this.setLayout(new BorderLayout());
-		this.initTabView();
+		setLayout(new BorderLayout());
+		initTabView();
 	}
 	
 	private void initTabView() {
@@ -51,8 +51,8 @@ public class TabView extends JPanel {
 		
 		logoutPanel.add(logoutButton, BorderLayout.EAST);
 		
-		this.add(logoutPanel, BorderLayout.NORTH);
-		this.add(tabbedPane, BorderLayout.CENTER);
+		add(logoutPanel, BorderLayout.NORTH);
+		add(tabbedPane, BorderLayout.CENTER);
 	}
 	
 	public GameLobbyView getLobby() {

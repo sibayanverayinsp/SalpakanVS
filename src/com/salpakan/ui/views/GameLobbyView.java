@@ -101,11 +101,11 @@ public class GameLobbyView extends JPanel {
 	private boolean isGameCreated;
 
 	public GameLobbyView() {
-		this.setLayout(new BorderLayout());
-		this.initRoomPanel();
-		this.initPlayersPanel();
-		this.initChatPanel();
-		this.initHelpPanel();
+		setLayout(new BorderLayout());
+		initRoomPanel();
+		initPlayersPanel();
+		initChatPanel();
+		initHelpPanel();
 		
 		isGameCreated = false;
 	}
@@ -124,7 +124,7 @@ public class GameLobbyView extends JPanel {
 		roomPanel.add(showCapturedRoom);
 		roomPanel.add(theBattlefieldRoom);
 		
-		this.add(roomPanel, BorderLayout.NORTH);
+		add(roomPanel, BorderLayout.NORTH);
 	}
 	
 	private JPanel initRoom(final String roomName) {
@@ -168,7 +168,7 @@ public class GameLobbyView extends JPanel {
 		ComponentUtils.setSize(playersPanel, Constants.WINDOW_WIDTH / 5, 0);
 		ComponentUtils.setPanelBorder(playersPanel, Constants.PLAYERS);
 		
-		this.add(playersPanel, BorderLayout.WEST);
+		add(playersPanel, BorderLayout.WEST);
 	}
 	
 	private void initChatPanel() {
@@ -191,7 +191,7 @@ public class GameLobbyView extends JPanel {
 		chatPanel.add(chatArea);
 		chatPanel.add(chatContainer);
 		
-		this.add(chatPanel, BorderLayout.CENTER);
+		add(chatPanel, BorderLayout.CENTER);
 	}
 	
 	private void initHelpPanel() {
@@ -200,7 +200,7 @@ public class GameLobbyView extends JPanel {
 		ComponentUtils.setSize(helpPanel, Constants.WINDOW_WIDTH / 4, 0);
 		ComponentUtils.setPanelBorder(helpPanel, Constants.INSTRUCTIONS);
 		
-		this.add(helpPanel, BorderLayout.EAST);
+		add(helpPanel, BorderLayout.EAST);
 	}
 	
 	public void test(final String message) {

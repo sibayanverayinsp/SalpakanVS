@@ -15,13 +15,13 @@ public class MainView extends JFrame {
 	private TabView tabsPanel;
 	
 	public MainView() {
-		this.setName(Constants.APP_NAME);
-		this.setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLayout(new BorderLayout());
-		this.initMainView();
+		setName(Constants.APP_NAME);
+		setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
+		setLocationRelativeTo(null);
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
+		initMainView();
 	}
 	
 	public LoginView getLoginPanel() {
@@ -44,7 +44,7 @@ public class MainView extends JFrame {
 		mainPanel.add(loginPanel, Constants.LOGIN);		
 		mainPanel.add(tabsPanel, Constants.TABS);
 		
-		this.add(mainPanel, BorderLayout.CENTER);
+		add(mainPanel, BorderLayout.CENTER);
 	}
 
 }

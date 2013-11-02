@@ -5,10 +5,8 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Message implements Serializable {
 	
-	public static final int MOVE = 0;
-	public static final int CHAT = 1;
-	public static final int LOGIN = 2;
-	public static final int LOGOUT = 3;
+	public static final int CHAT = 0;
+	public static final int LOGOUT = 1;
 	
 	private int type;
 	private String message;
