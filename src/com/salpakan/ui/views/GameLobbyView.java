@@ -175,16 +175,13 @@ public class GameLobbyView extends JPanel {
 		final Container chatContainer = new Container();
 		final JButton sendButton = new JButton(Constants.SEND_BUTTON);
 		final JPanel chatPanel = new JPanel();
-		final JTextField chatField = new JTextField();
-		chatArea = new JTextArea();
+		final JTextField chatField = new JTextField(42);
+		chatArea = new JTextArea(16, 48);
 		
 		chatArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		chatArea.setEditable(false);
 		chatArea.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
-		chatArea.setColumns(48);
-		chatArea.setRows(16);
 		chatField.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
-		chatField.setColumns(42);
 		
 		chatContainer.setLayout(new BorderLayout());
 		chatContainer.add(chatField, BorderLayout.WEST);

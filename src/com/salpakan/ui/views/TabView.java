@@ -23,7 +23,6 @@ public class TabView extends JPanel {
 			final MainView mainView = app.getMainview();
 			final JPanel mainPanel = mainView.getMainPanel();
 			app.clearCredentials();
-			mainView.clearServer();
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.LOGIN);
 		}
 	}

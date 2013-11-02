@@ -1,6 +1,5 @@
 package com.salpakan.app;
 
-import com.salpakan.constants.Constants;
 import com.salpakan.ui.views.MainView;
 
 public class App {
@@ -14,7 +13,7 @@ public class App {
 	
 	public App() {
 		me = this;
-		mainView = new MainView(Constants.PORT);
+		mainView = new MainView();
 		mainView.setVisible(true);
 	}
 	
@@ -48,7 +47,7 @@ public class App {
 		this.username = username;
 	}
 	
-	//main
+	//app main
 	public static void main(final String[] args) {
 		new App();
 	}

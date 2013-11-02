@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import com.salpakan.ui.views.MainView;
+import com.salpakan.app.AppServer;
 
 public class Server {
 	
@@ -20,15 +20,15 @@ public class Server {
 	
 	private int port;
 	
-	private MainView main;
+	private AppServer appServer;
 	
 	public Server(final int port) {
 		this(port, null);
 	}
 
-	public Server(final int port, final MainView main) {
+	public Server(final int port, final AppServer appServer) {
 		this.port = port;
-		this.main = main;
+		this.appServer = appServer;
 		clients = new ArrayList<ClientThread>();
 	}
 	
@@ -69,7 +69,6 @@ public class Server {
 	}
 	
 	private synchronized void broadcast(final String message) {
-		main.getTabsPanel().getLobby().test(message);
 		for(int i = clients.size(); --i >= 0;) {
 			ClientThread client = clients.get(i);
 			if(!client.writeMsg(message)) {

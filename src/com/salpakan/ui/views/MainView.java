@@ -2,38 +2,19 @@ package com.salpakan.ui.views;
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.salpakan.constants.Constants;
-import com.salpakan.network.Server;
 
 @SuppressWarnings("serial")
-public class MainView extends JFrame implements ActionListener {
-	
-	private final class ServerRunning extends Thread {
-		@Override
-		public void run() {
-			server.start();
-			JOptionPane.showMessageDialog(MainView.this, Constants.SERVER_CRASHED, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
-			server = null;
-		}
-	}
+public class MainView extends JFrame {
 	
 	private JPanel mainPanel;
 	private LoginView loginPanel;
 	private TabView tabsPanel;
 	
-	private Server server;
-	
-	private int port;
-	
-	public MainView(final int port) {
-		this.port = port;
+	public MainView() {
 		this.setName(Constants.APP_NAME);
 		this.setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 		this.setLocationRelativeTo(null);
@@ -41,24 +22,6 @@ public class MainView extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.initMainView();
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (server != null) {
-			server.stop();
-			server = null;
-			return;
-		}
-		server = new Server(port, this);
-		new ServerRunning().start();
-	}
-	
-	public void clearServer() {
-		if (server != null) {
-			server.stop();
-			server = null;
-		}
 	}
 	
 	public LoginView getLoginPanel() {
