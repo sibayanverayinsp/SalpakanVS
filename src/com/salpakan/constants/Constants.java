@@ -85,4 +85,16 @@ public final class Constants {
 	public static final String ERROR = "Error!";
 	public static final String FIELDS_REQUIRED = "All fields are required!";
 	public static final String SERVER_CRASHED = "Server crashed!";
+	
+	/*
+	 * 		Timer Strings
+	 */
+	public static final String TIMER_OPTIONS = "Timer Options";
+	public static final String NO_TIMER = "No timer";
+	public static final String TWO_MIN = "2 minutes";
+	public static final String FIVE_MIN = "5 minutes";
+	public static final String EIGHT_MIN = "8 minutes";
+	public static final String TEN_MIN = "10 minutes";
+	public static final String TWENTY_MIN = "20 minutes";
+	
 }

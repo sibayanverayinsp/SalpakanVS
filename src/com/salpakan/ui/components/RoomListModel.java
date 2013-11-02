@@ -45,7 +45,11 @@ public class RoomListModel implements ListModel {
 
 	@Override
 	public Object getElementAt(final int index) {
-		return dataList.get(index);
+		if (index >= 0 && index < getSize()) {
+			return dataList.get(index);
+		} else {
+			return "";
+		}
 	}
 
 	@Override

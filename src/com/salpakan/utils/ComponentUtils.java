@@ -1,5 +1,6 @@
 package com.salpakan.utils;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -27,12 +28,12 @@ public class ComponentUtils {
 		setSize(button, Constants.BUTTON_DIMENSION);
 	}
 	
-	public static void setSize(final JComponent component, final int width, final int height) {
+	public static void setSize(final Component component, final int width, final int height) {
 		final Dimension dimension = new Dimension(width, height);
 		setSize(component, dimension);
 	}
 	
-	public static void setSize(final JComponent component, final Dimension dimension) {
+	public static void setSize(final Component component, final Dimension dimension) {
 		component.setSize(dimension);
 		component.setPreferredSize(dimension);
 		component.setMaximumSize(dimension);

@@ -11,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -19,6 +20,7 @@ import javax.swing.JTextField;
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.ui.components.RoomListModel;
+import com.salpakan.ui.components.TimerOptionsPanel;
 import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
@@ -37,7 +39,7 @@ public class GameLobbyView extends JPanel {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
 			final int index = list.getSelectedIndex();
-			if (model.getElementAt(index).equals(App.getInstance().getUsername())) {
+			if (model.getElementAt(index).toString().endsWith(App.getInstance().getUsername())) {
 				model.remove(index);
 				list.clearSelection();
 				isGameCreated = false;
@@ -58,7 +60,7 @@ public class GameLobbyView extends JPanel {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
 			final int index = list.getSelectedIndex();
-			if (!model.getElementAt(index).equals(App.getInstance().getUsername())) {
+			if (!model.getElementAt(index).toString().endsWith(App.getInstance().getUsername())) {
 				model.remove(index);
 				list.clearSelection();
 				isGameCreated = false;
@@ -81,9 +83,12 @@ public class GameLobbyView extends JPanel {
 			if (!isGameCreated) {
 				final String user = App.getInstance().getUsername();
 				if (!model.contains(user)) {
-					model.add(user);
-					list.clearSelection();
-					isGameCreated = true;
+					final TimerOptionsPanel timerPanel = new TimerOptionsPanel();
+					if (JOptionPane.showConfirmDialog(GameLobbyView.this, timerPanel, Constants.TIMER_OPTIONS, JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+						model.add(timerPanel.getSelectedTime() + " " + user);
+						list.clearSelection();
+						isGameCreated = true;
+					}
 				}
 			}
 		}
