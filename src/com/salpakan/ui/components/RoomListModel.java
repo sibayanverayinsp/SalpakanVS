@@ -21,8 +21,10 @@ public class RoomListModel implements ListModel {
 	}
 	
 	public void remove(final int index) {
-		dataList.remove(index);
-		notifyDataChanged(ListDataEvent.INTERVAL_REMOVED, index);
+		if (index >= 0 && index < getSize()) {
+			dataList.remove(index);
+			notifyDataChanged(ListDataEvent.INTERVAL_REMOVED, index);
+		}
 	}
 	
 	public boolean contains(final String data) {
