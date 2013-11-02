@@ -39,7 +39,8 @@ public class GameLobbyView extends JPanel {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
 			final int index = list.getSelectedIndex();
-			if (model.getElementAt(index).toString().endsWith(App.getInstance().getUsername())) {
+			final String username = model.getElementAt(index).toString();
+			if (username.substring(username.indexOf(" ") + 1).equals(App.getInstance().getUsername())) {
 				model.remove(index);
 				list.clearSelection();
 				isGameCreated = false;
@@ -60,7 +61,8 @@ public class GameLobbyView extends JPanel {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
 			final int index = list.getSelectedIndex();
-			if (!model.getElementAt(index).toString().endsWith(App.getInstance().getUsername())) {
+			final String username = model.getElementAt(index).toString();
+			if (!username.substring(username.indexOf(" ") + 1).equals(App.getInstance().getUsername())) {
 				model.remove(index);
 				list.clearSelection();
 				isGameCreated = false;
