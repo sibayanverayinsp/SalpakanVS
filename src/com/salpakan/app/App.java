@@ -1,5 +1,12 @@
 package com.salpakan.app;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import com.salpakan.constants.Constants;
+import com.salpakan.network.Client;
+import com.salpakan.ui.views.GameLobbyView;
+import com.salpakan.ui.views.LoginView;
 import com.salpakan.ui.views.MainView;
 
 public class App {
@@ -11,8 +18,14 @@ public class App {
 	
 	private final MainView mainView;
 	
+	private Client client;
+	
+	private boolean isConnected;
+	
 	public App() {
 		me = this;
+		client = null;
+		isConnected = false;
 		mainView = new MainView();
 		mainView.setVisible(true);
 	}
@@ -21,14 +34,34 @@ public class App {
 		return me;
 	}
 	
-	public void clearCredentials() {
-		setUsername("");
-		setPassword("");
-		getMainview().getLoginPanel().clearFields();
+	public void alertError(final String message) {
+		JOptionPane.showMessageDialog(mainView, message, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public MainView getMainview() {
+	public void clearCredentials() {
+		client = null;
+		setUsername("");
+		setPassword("");
+	}
+	
+	public Client getClient() {
+		return client;
+	}
+	
+	public LoginView getLoginView() {
+		return mainView.getLoginView();
+	}
+	
+	public JPanel getMainPanel() {
+		return mainView.getMainPanel();
+	}
+	
+	public MainView getMainView() {
 		return mainView;
+	}
+	
+	public GameLobbyView getLobby() {
+		return mainView.getTabsView().getLobby();
 	}
 	
 	public String getPassword() {
@@ -37,6 +70,18 @@ public class App {
 	
 	public String getUsername() {
 		return username;
+	}
+	
+	public boolean isConnected() {
+		return isConnected;
+	}
+	
+	public void setClient(final Client client) {
+		this.client = client;
+	}
+	
+	public void setIsConnected(final boolean isConnected) {
+		this.isConnected = isConnected;
 	}
 	
 	public void setPassword(final String password) {

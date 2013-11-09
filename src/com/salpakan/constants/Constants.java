@@ -1,7 +1,9 @@
 package com.salpakan.constants;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
+
 import javax.swing.border.EmptyBorder;
 
 public final class Constants {
@@ -17,6 +19,7 @@ public final class Constants {
 	 */
 	public static final int SOCKET_TIMEOUT = 100;
 	public static final int DEFAULT_PORT = 1500;
+	public static final String DEFAULT_HOST = "localhost";
 	
 	/*
 	 *		Game states
@@ -66,6 +69,7 @@ public final class Constants {
 	public static final Dimension BUTTON_DIMENSION = new Dimension(80, 30);
 	public static final Dimension TEXTFIELD_DIMENSION = new Dimension(200, 30);
 	public static final EmptyBorder MARGIN = new EmptyBorder(20, 20, 20, 20);
+	public static final Font FONT = new Font(Font.SERIF, Font.PLAIN, 15);
 	
 	/*
 	 * 		CardLayout Strings
@@ -86,17 +90,21 @@ public final class Constants {
 	public static final String ERROR = "Error!";
 	public static final String FIELDS_REQUIRED = "All fields are required!";
 	public static final String SERVER_CRASHED = "Server crashed!";
-	public static final String INVALID_PORT = "Invalid port number!";
+	public static final String CONNECT_ERROR = "Error connecting to server!";
+	public static final String STREAM_ERROR = "Error creating streams!";
+	public static final String WRITE_ERROR = "Error writing to streams!";
+	public static final String DISCONNECTED = "Disconnected from the server!";
 	
 	/*
 	 * 		Server Strings
 	 */
-	public static final String PORT = "Port";
 	public static final String START = "Start";
 	public static final String STOP = "Stop";
 	public static final String SERVER = "Server";
 	public static final String SERVER_STARTED = "Server started!";
 	public static final String SERVER_STOPPED = "Server stopped!";
+	public static final String LOGS_IN = "Logs in";
+	public static final String LOGS_OUT = "Logs out";
 	
 	/*
 	 * 		Timer Strings

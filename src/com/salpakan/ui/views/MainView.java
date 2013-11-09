@@ -24,7 +24,7 @@ public class MainView extends JFrame {
 		initMainView();
 	}
 	
-	public LoginView getLoginPanel() {
+	public LoginView getLoginView() {
 		return loginPanel;
 	}
 	
@@ -32,7 +32,7 @@ public class MainView extends JFrame {
 		return mainPanel;
 	}
 
-	public TabView getTabsPanel() {
+	public TabView getTabsView() {
 		return tabsPanel;
 	}
 	

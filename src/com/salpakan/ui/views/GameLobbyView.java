@@ -3,7 +3,6 @@ package com.salpakan.ui.views;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,6 +25,15 @@ import com.salpakan.utils.ComponentUtils;
 @SuppressWarnings("serial")
 public class GameLobbyView extends JPanel {
 	
+	private final class SendButtonActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(final ActionEvent evt) {
+			if (!App.getInstance().isConnected()) {
+				return;
+			}
+		}
+	}
+
 	private final class CancelButtonActionListener implements ActionListener {
 		
 		private final RoomListModel model;
@@ -38,6 +46,10 @@ public class GameLobbyView extends JPanel {
 		
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
+			if (!App.getInstance().isConnected()) {
+				return;
+			}
+			
 			final int index = list.getSelectedIndex();
 			final String username = model.getElementAt(index).toString();
 			if (username.substring(username.indexOf(" ") + 1).equals(App.getInstance().getUsername())) {
@@ -60,6 +72,10 @@ public class GameLobbyView extends JPanel {
 		
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
+			if (!App.getInstance().isConnected()) {
+				return;
+			}
+			
 			final int index = list.getSelectedIndex();
 			final String username = model.getElementAt(index).toString();
 			if (!username.substring(username.indexOf(" ") + 1).equals(App.getInstance().getUsername())) {
@@ -82,6 +98,10 @@ public class GameLobbyView extends JPanel {
 		
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
+			if (!App.getInstance().isConnected()) {
+				return;
+			}
+			
 			if (!isGameCreated) {
 				final String user = App.getInstance().getUsername();
 				if (!model.contains(user)) {
@@ -97,6 +117,7 @@ public class GameLobbyView extends JPanel {
 	}
 	
 	private JTextArea chatArea;
+	private JTextArea logsArea;
 	
 	private boolean isGameCreated;
 
@@ -178,17 +199,19 @@ public class GameLobbyView extends JPanel {
 		final JTextField chatField = new JTextField(42);
 		chatArea = new JTextArea(16, 48);
 		
-		chatArea.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		chatArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		chatArea.setEditable(false);
-		chatArea.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
-		chatField.setFont(new Font(Font.SERIF, Font.PLAIN, 15));
+		chatArea.setFont(Constants.FONT);
+		
+		chatField.setFont(Constants.FONT);
+		sendButton.addActionListener(new SendButtonActionListener());
 		
 		chatContainer.setLayout(new BorderLayout());
 		chatContainer.add(chatField, BorderLayout.WEST);
 		chatContainer.add(sendButton, BorderLayout.EAST);
 		
 		ComponentUtils.setPanelBorder(chatPanel, Constants.CHAT);
-		chatPanel.add(chatArea);
+		chatPanel.add(new JScrollPane(chatArea));
 		chatPanel.add(chatContainer);
 		
 		add(chatPanel, BorderLayout.CENTER);
@@ -196,15 +219,30 @@ public class GameLobbyView extends JPanel {
 	
 	private void initHelpPanel() {
 		final JPanel helpPanel = new JPanel();
+		logsArea = new JTextArea(18, 20);
+		
+		logsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+		logsArea.setEditable(false);
+		logsArea.setFont(Constants.FONT);
 		
 		ComponentUtils.setSize(helpPanel, Constants.WINDOW_WIDTH / 4, 0);
 		ComponentUtils.setPanelBorder(helpPanel, Constants.INSTRUCTIONS);
+		helpPanel.add(new JScrollPane(logsArea));
 		
 		add(helpPanel, BorderLayout.EAST);
 	}
 	
-	public void test(final String message) {
-		chatArea.append(message);
+	public void appendChat(final String message) {
+		chatArea.append(message + "\n");
+	}
+	
+	public void appendLog(final String log) {
+		logsArea.append(log + "\n");
+	}
+	
+	public void clearFields() {
+		chatArea.setText("");
+		logsArea.setText("");
 	}
 	
 }

@@ -13,7 +13,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -22,6 +21,7 @@ import javax.swing.border.TitledBorder;
 
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
+import com.salpakan.network.Client;
 import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
@@ -40,15 +40,23 @@ public class LoginView extends JPanel {
 			pass = pass.trim();
 			
 			if (user.length() == 0 || pass.length() == 0) {
-				JOptionPane.showMessageDialog(LoginView.this, Constants.FIELDS_REQUIRED, Constants.ERROR, JOptionPane.ERROR_MESSAGE);
+				App.getInstance().alertError(Constants.FIELDS_REQUIRED);
 				password.setText("");
 				return;
 			}
 			
-			final JPanel mainPanel = App.getInstance().getMainview().getMainPanel();
 			final App app = App.getInstance();
+			final JPanel mainPanel = app.getMainPanel();
+			
 			app.setUsername(user);
 			app.setPassword(pass);
+			app.setClient(new Client(Constants.DEFAULT_HOST, Constants.DEFAULT_PORT));
+			
+			if (!app.getClient().start()) {
+				return;
+			}
+			
+			app.setIsConnected(true);
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
 		}
 	}
@@ -80,9 +88,9 @@ public class LoginView extends JPanel {
 		final GridBagConstraints constraints = new GridBagConstraints();
 		final JLabel usernameLabel = new JLabel(Constants.USERNAME);
 		final JLabel passwordLabel = new JLabel(Constants.PASSWORD);
+		final JButton loginButton = new JButton(Constants.LOGIN_BUTTON);
 		username = new JTextField();
 		password = new JPasswordField();
-		final JButton loginButton = new JButton(Constants.LOGIN_BUTTON);
 		
 		ComponentUtils.setCustomTextfield(username);
 		ComponentUtils.setCustomTextfield(password);

@@ -11,6 +11,7 @@ import javax.swing.JTabbedPane;
 
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
+import com.salpakan.network.Message;
 import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
@@ -20,13 +21,20 @@ public class TabView extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			final App app = App.getInstance();
-			final MainView mainView = app.getMainview();
-			final JPanel mainPanel = mainView.getMainPanel();
+			
+			if (!app.isConnected()) {
+				return;
+			}
+			
+			final JPanel mainPanel = app.getMainPanel();
+			app.getClient().sendMessage(new Message(Message.LOGOUT, ""));
 			app.clearCredentials();
+			app.getLoginView().clearFields();
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.LOGIN);
 		}
 	}
 	
+	private JButton logoutButton;
 	private GameLobbyView lobbyPanel;
 
 	public TabView() {
@@ -37,7 +45,7 @@ public class TabView extends JPanel {
 	private void initTabView() {
 		final JTabbedPane tabbedPane = new JTabbedPane();
 		final JPanel logoutPanel = new JPanel(new BorderLayout());
-		final JButton logoutButton = new JButton(Constants.LOGOUT_BUTTON);
+		logoutButton = new JButton(Constants.LOGOUT_BUTTON);
 		lobbyPanel = new GameLobbyView();
 		final GameView gamePanel = new GameView();
 		final AboutView aboutPanel = new AboutView();

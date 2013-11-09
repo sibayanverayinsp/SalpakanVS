@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.salpakan.app.AppServer;
+import com.salpakan.constants.Constants;
 
 public class Server {
 	
@@ -35,7 +36,7 @@ public class Server {
 	}
 	
 	public void start() {
-		display("Server started!");
+		display(Constants.SERVER_STARTED);
 		keepGoing = true;
 		try {
 			final ServerSocket serverSocket = new ServerSocket(port);
@@ -63,10 +64,10 @@ public class Server {
 	}
 	
 	public void stop() {
-		display("Server stopped!");
+		display(Constants.SERVER_STOPPED);
 		keepGoing = false;
 		try {
-			new Socket("localhost", port);
+			new Socket(Constants.DEFAULT_HOST, port);
 		} catch (final UnknownHostException uhe) {
 			uhe.printStackTrace();
 		} catch (final IOException ioe) {
@@ -85,7 +86,7 @@ public class Server {
 			client = clients.get(i);
 			if (!client.writeMsg(message)) {
 				clients.remove(i);
-				display(client.username + " logs out");
+				display(client.username + " " + Constants.LOGS_OUT.toLowerCase());
 			}
 		}
 	}
@@ -101,7 +102,7 @@ public class Server {
 		}
 	}
 	
-	private class ClientThread extends Thread {
+	private final class ClientThread extends Thread {
 
 		private int id;
 		
@@ -114,15 +115,15 @@ public class Server {
 		
 		private String username;
 		
-		public ClientThread(final Socket socket) {
+		private ClientThread(final Socket socket) {
 			id = ++uniqueID;
 			this.socket = socket;
 			try {
-				inputStream = new ObjectInputStream(socket.getInputStream());
 				outputStream = new ObjectOutputStream(socket.getOutputStream());
+				inputStream = new ObjectInputStream(socket.getInputStream());
 				username = (String) inputStream.readObject();
 				
-				display(username + " logs in");
+				broadcast(username + " " + Constants.LOGS_IN.toLowerCase());
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 				return;
@@ -131,16 +132,14 @@ public class Server {
 			}
 		}
 		
-		public void run() {
+		public synchronized void run() {
 			boolean keepGoing = true;
 			while (keepGoing) {
 				try {
 					message = (Message) inputStream.readObject();
 				} catch (final IOException ioe) {
-					ioe.printStackTrace();
 					break;
 				} catch (final ClassNotFoundException cnfe) {
-					cnfe.printStackTrace();
 					break;
 				}
 				
@@ -151,7 +150,7 @@ public class Server {
 					break;
 					
 				case Message.LOGOUT:
-					display(username + "logs out");
+					display(username + " " + Constants.LOGS_OUT.toLowerCase());
 					keepGoing = false;
 					break;
 
