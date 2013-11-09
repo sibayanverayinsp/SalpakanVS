@@ -7,6 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
 import com.salpakan.app.AppServer;
 import com.salpakan.constants.Constants;
 
@@ -101,8 +102,6 @@ public class Server {
 
 		private int id;
 		
-		private Message message;
-		
 		private ObjectInputStream inputStream;
 		private ObjectOutputStream outputStream;
 		
@@ -128,6 +127,11 @@ public class Server {
 		}
 		
 		public synchronized void run() {
+			ClientThread client;
+			StringBuffer buffer;
+			Message message;
+			int type;
+			
 			while (true) {
 				try {
 					message = (Message) inputStream.readObject();
@@ -137,9 +141,19 @@ public class Server {
 					break;
 				}
 				
-				broadcast(message);
-				if (message.getType() == Message.LOGOUT) {
+				type = message.getType();
+				if (type == Message.PLAYERS) {
+					buffer = new StringBuffer();
+					for(int i = 0, j = clients.size(); i < j; i++) {
+						client = clients.get(i);
+						buffer.append(client.username + "&");
+					}
+					broadcast(new Message(type, username, buffer.toString()));
+				} else if (type == Message.LOGOUT) {
+					broadcast(message);
 					break;
+				} else {
+					broadcast(message);
 				}
 			}
 			remove(id);

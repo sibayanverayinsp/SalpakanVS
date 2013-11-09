@@ -16,9 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Client;
+import com.salpakan.network.Message;
 import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
@@ -27,6 +29,7 @@ public class LoginView extends JPanel {
 	private final class LoginActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
+			final App app = App.getInstance();
 			final String user = username.getText().trim();
 			final char[] passChar = password.getPassword();
 			String pass = "";
@@ -37,12 +40,16 @@ public class LoginView extends JPanel {
 			pass = pass.trim();
 			
 			if (user.length() == 0 || pass.length() == 0) {
-				App.getInstance().alertError(Constants.FIELDS_REQUIRED);
+				app.alertError(Constants.FIELDS_REQUIRED);
+				password.setText("");
+				return;
+			} else if (user.contains("&")) {
+				//TODO
+				app.alertError("Username cannot contain '&'");
 				password.setText("");
 				return;
 			}
 			
-			final App app = App.getInstance();
 			final JPanel mainPanel = app.getMainPanel();
 			
 			app.setUsername(user);
@@ -54,6 +61,8 @@ public class LoginView extends JPanel {
 			}
 			
 			app.setIsConnected(true);
+			//TODO
+			app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), "players"));
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
 		}
 	}

@@ -16,6 +16,10 @@ public class DataListModel implements ListModel {
 		notifyDataChanged(ListDataEvent.INTERVAL_ADDED, dataList.size() - 1);
 	}
 	
+	public void clear() {
+		dataList.clear();
+	}
+	
 	public void remove(final int index) {
 		if (index >= 0 && index < getSize()) {
 			dataList.remove(index);

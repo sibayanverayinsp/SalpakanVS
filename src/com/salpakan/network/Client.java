@@ -111,6 +111,10 @@ public class Client {
 				case Message.LOGIN:
 					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
 					break;
+					
+				case Message.PLAYERS:
+					lobby.refreshPlayersList(message.getMessage());
+					break;
 
 				default:
 					break;

@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Message;
@@ -123,6 +124,8 @@ public class GameLobbyView extends JPanel {
 	private JTextArea chatArea;
 	private JTextArea logsArea;
 	
+	private DataListModel playersListModel;
+	
 	private boolean isGameCreated;
 
 	public GameLobbyView() {
@@ -191,7 +194,7 @@ public class GameLobbyView extends JPanel {
 		final JPanel playersPanel = new JPanel();
 		final JList playersList = new JList();
 		final JScrollPane scrollPane = new JScrollPane();
-		final DataListModel playersListModel = new DataListModel();
+		playersListModel = new DataListModel();
 		
 		playersList.setModel(playersListModel);
 		
@@ -254,6 +257,14 @@ public class GameLobbyView extends JPanel {
 	public void clearFields() {
 		chatArea.setText("");
 		logsArea.setText("");
+	}
+	
+	public void refreshPlayersList(final String message) {
+		final String[] players = message.split("&");
+		playersListModel.clear();
+		for (int i = 0, j = players.length; i < j; i++) {
+			playersListModel.add(players[i]);
+		}
 	}
 	
 }
