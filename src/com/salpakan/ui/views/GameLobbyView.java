@@ -1,12 +1,10 @@
 package com.salpakan.ui.views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -15,7 +13,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Message;
@@ -29,12 +26,14 @@ public class GameLobbyView extends JPanel {
 	private final class SendButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
-			if (!App.getInstance().isConnected()) {
+			final App app = App.getInstance();
+			if (!app.isConnected()) {
 				return;
 			}
 			
-			App.getInstance().getClient().sendMessage(new Message(Message.CHAT, App.getInstance().getUsername(), chatField.getText().trim()));
+			app.getClient().sendMessage(new Message(Message.CHAT, app.getUsername(), chatField.getText().trim()));
 			chatField.setText("");
+			chatField.requestFocusInWindow();
 		}
 	}
 
@@ -202,11 +201,9 @@ public class GameLobbyView extends JPanel {
 		final JButton sendButton = new JButton(Constants.SEND_BUTTON);
 		final JPanel chatPanel = new JPanel();
 		chatField = new JTextField(42);
-		chatArea = new JTextArea(16, 48);
+		chatArea = new JTextArea(15, 46);
 		
-		chatArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		chatArea.setEditable(false);
-		chatArea.setFont(Constants.FONT);
+		ComponentUtils.setCustomTextArea(chatArea);
 		
 		chatField.setFont(Constants.FONT);
 		sendButton.addActionListener(new SendButtonActionListener());
@@ -224,11 +221,9 @@ public class GameLobbyView extends JPanel {
 	
 	private void initHelpPanel() {
 		final JPanel helpPanel = new JPanel();
-		logsArea = new JTextArea(18, 20);
+		logsArea = new JTextArea(17, 20);
 		
-		logsArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		logsArea.setEditable(false);
-		logsArea.setFont(Constants.FONT);
+		ComponentUtils.setCustomTextArea(logsArea);
 		
 		ComponentUtils.setSize(helpPanel, Constants.WINDOW_WIDTH / 4, 0);
 		ComponentUtils.setPanelBorder(helpPanel, Constants.INSTRUCTIONS);
@@ -239,10 +234,12 @@ public class GameLobbyView extends JPanel {
 	
 	public void appendChat(final String message) {
 		chatArea.append(message + "\n");
+		chatArea.setCaretPosition(chatArea.getText().length() - 1);
 	}
 	
 	public void appendLog(final String log) {
 		logsArea.append(log + "\n");
+		logsArea.setCaretPosition(logsArea.getText().length() - 1);
 	}
 	
 	public void clearFields() {

@@ -2,7 +2,6 @@ package com.salpakan.constants;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Insets;
 import java.text.SimpleDateFormat;
 
 import javax.swing.border.EmptyBorder;
@@ -66,11 +65,10 @@ public final class Constants {
 	/*
 	 * 		Component Style Stuffs
 	 */
-	public static final Insets INSET = new Insets(10, 10, 10, 10);
-	public static final EmptyBorder PADDING = new EmptyBorder(INSET);
+	public static final EmptyBorder PADDING = new EmptyBorder(10, 10, 10, 10);
+	public static final EmptyBorder MARGIN = new EmptyBorder(20, 20, 20, 20);
 	public static final Dimension BUTTON_DIMENSION = new Dimension(80, 30);
 	public static final Dimension TEXTFIELD_DIMENSION = new Dimension(200, 30);
-	public static final EmptyBorder MARGIN = new EmptyBorder(20, 20, 20, 20);
 	public static final Font FONT = new Font(Font.SERIF, Font.PLAIN, 15);
 	
 	/*

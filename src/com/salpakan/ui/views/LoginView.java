@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -92,8 +93,8 @@ public class LoginView extends JPanel {
 		username = new JTextField();
 		password = new JPasswordField();
 		
-		ComponentUtils.setCustomTextfield(username);
-		ComponentUtils.setCustomTextfield(password);
+		ComponentUtils.setCustomTextField(username);
+		ComponentUtils.setCustomTextField(password);
 		ComponentUtils.setCustomButton(loginButton);
 		
 		loginButton.addActionListener(new LoginActionListener());
@@ -105,7 +106,7 @@ public class LoginView extends JPanel {
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.insets = Constants.INSET;
+		constraints.insets = new Insets(10, 10, 10, 10);
 		loginPanel.add(usernameLabel, constraints);
 
 		constraints.gridx = 1;
