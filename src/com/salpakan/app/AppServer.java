@@ -53,7 +53,7 @@ public class AppServer extends JFrame implements ActionListener {
 	}
 	
 	public void appendLog(final String log) {
-		logsArea.append(log);
+		logsArea.append(log + "\n");
 		logsArea.setCaretPosition(logsArea.getText().length() - 1);
 	}
 	
@@ -82,7 +82,7 @@ public class AppServer extends JFrame implements ActionListener {
 			server = null;
 			if (startStopButton.getText().equals(Constants.STOP)) {
 				startStopButton.setText(Constants.START);
-				appendLog(Constants.SERVER_CRASHED.toUpperCase() + "\n");
+				appendLog(Constants.SERVER_CRASHED.toUpperCase());
 			}
 		}
 	}

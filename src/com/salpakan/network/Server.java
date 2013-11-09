@@ -6,10 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-
 import com.salpakan.app.AppServer;
 import com.salpakan.constants.Constants;
 
@@ -20,7 +17,6 @@ public class Server {
 	private ArrayList<ClientThread> clients;
 	private int port;
 	private AppServer appServer;
-	private SimpleDateFormat dateFormat;
 	
 	private boolean keepGoing;
 	
@@ -31,12 +27,11 @@ public class Server {
 	public Server(final int port, final AppServer appServer) {
 		this.port = port;
 		this.appServer = appServer;
-		dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 		clients = new ArrayList<ClientThread>();
 	}
 	
 	public void start() {
-		display(Constants.SERVER_STARTED);
+		appServer.appendLog(Constants.SERVER_STARTED);
 		keepGoing = true;
 		try {
 			final ServerSocket serverSocket = new ServerSocket(port);
@@ -64,7 +59,7 @@ public class Server {
 	}
 	
 	public void stop() {
-		display(Constants.SERVER_STOPPED);
+		appServer.appendLog(Constants.SERVER_STOPPED);
 		keepGoing = false;
 		try {
 			new Socket(Constants.DEFAULT_HOST, port);
@@ -75,18 +70,18 @@ public class Server {
 		}
 	}
 	
-	private void display(final String message) {
-		appServer.appendLog(dateFormat.format(new Date()) + " " + message + "\n");
+	private void display(final Message message) {
+		appServer.appendLog("<" + message.getDate() + "> " + message.getUsername() + ": " + message.getMessage());
 	}
 	
-	private synchronized void broadcast(final String message) {
+	private synchronized void broadcast(final Message message) {
 		display(message);
 		ClientThread client;
 		for (int i = clients.size(); --i >= 0; ) {
 			client = clients.get(i);
 			if (!client.writeMsg(message)) {
 				clients.remove(i);
-				display(client.username + " " + Constants.LOGS_OUT.toLowerCase());
+				display(message);
 			}
 		}
 	}
@@ -123,7 +118,7 @@ public class Server {
 				inputStream = new ObjectInputStream(socket.getInputStream());
 				username = (String) inputStream.readObject();
 				
-				broadcast(username + " " + Constants.LOGS_IN.toLowerCase());
+				broadcast(new Message(Message.LOGIN, username, Constants.LOGS_IN.toLowerCase()));
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 				return;
@@ -133,8 +128,7 @@ public class Server {
 		}
 		
 		public synchronized void run() {
-			boolean keepGoing = true;
-			while (keepGoing) {
+			while (true) {
 				try {
 					message = (Message) inputStream.readObject();
 				} catch (final IOException ioe) {
@@ -143,18 +137,8 @@ public class Server {
 					break;
 				}
 				
-				final String msg = message.getMessage();
-				switch (message.getType()) {
-				case Message.CHAT:
-					broadcast(username + ": " + msg);
-					break;
-					
-				case Message.LOGOUT:
-					display(username + " " + Constants.LOGS_OUT.toLowerCase());
-					keepGoing = false;
-					break;
-
-				default:
+				broadcast(message);
+				if (message.getType() == Message.LOGOUT) {
 					break;
 				}
 			}
@@ -172,13 +156,13 @@ public class Server {
 			}
 		}
 		
-		private boolean writeMsg(final String msg) {
+		private boolean writeMsg(final Message message) {
 			if (!socket.isConnected()) {
 				close();
 				return false;
 			}
 			try {
-				outputStream.writeObject(msg);
+				outputStream.writeObject(message);
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 			}

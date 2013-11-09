@@ -3,6 +3,7 @@ package com.salpakan.constants;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
+import java.text.SimpleDateFormat;
 
 import javax.swing.border.EmptyBorder;
 
@@ -20,6 +21,7 @@ public final class Constants {
 	public static final int SOCKET_TIMEOUT = 100;
 	public static final int DEFAULT_PORT = 1500;
 	public static final String DEFAULT_HOST = "localhost";
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	
 	/*
 	 *		Game states

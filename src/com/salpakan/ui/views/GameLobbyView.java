@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
+import com.salpakan.network.Message;
 import com.salpakan.ui.components.RoomListModel;
 import com.salpakan.ui.components.TimerOptionsPanel;
 import com.salpakan.utils.ComponentUtils;
@@ -31,6 +32,9 @@ public class GameLobbyView extends JPanel {
 			if (!App.getInstance().isConnected()) {
 				return;
 			}
+			
+			App.getInstance().getClient().sendMessage(new Message(Message.CHAT, App.getInstance().getUsername(), chatField.getText().trim()));
+			chatField.setText("");
 		}
 	}
 
@@ -116,6 +120,7 @@ public class GameLobbyView extends JPanel {
 		}
 	}
 	
+	private JTextField chatField;
 	private JTextArea chatArea;
 	private JTextArea logsArea;
 	
@@ -196,7 +201,7 @@ public class GameLobbyView extends JPanel {
 		final Container chatContainer = new Container();
 		final JButton sendButton = new JButton(Constants.SEND_BUTTON);
 		final JPanel chatPanel = new JPanel();
-		final JTextField chatField = new JTextField(42);
+		chatField = new JTextField(42);
 		chatArea = new JTextArea(16, 48);
 		
 		chatArea.setBorder(BorderFactory.createLineBorder(Color.GRAY));

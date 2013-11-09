@@ -27,7 +27,7 @@ public class TabView extends JPanel {
 			}
 			
 			final JPanel mainPanel = app.getMainPanel();
-			app.getClient().sendMessage(new Message(Message.LOGOUT, ""));
+			app.getClient().sendMessage(new Message(Message.LOGOUT, app.getUsername(), Constants.LOGS_OUT.toLowerCase()));
 			app.clearCredentials();
 			app.getLoginView().clearFields();
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.LOGIN);

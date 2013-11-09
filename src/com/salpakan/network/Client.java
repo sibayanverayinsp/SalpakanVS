@@ -57,6 +57,10 @@ public class Client {
 	}
 	
 	public void sendMessage(final Message message) {
+		if (message.getMessage().length() == 0) {
+			return;
+		}
+		
 		try {
 			outputStream.writeObject(message);
 		} catch (final IOException ioe) {
@@ -75,10 +79,18 @@ public class Client {
 	}
 	
 	private final class ListenFromServer extends Thread {
+		
+		private Message message;
+		private final GameLobbyView lobby;
+		
+		private ListenFromServer() {
+			lobby = App.getInstance().getLobby();
+		}
+		
 		public synchronized void run() {
 			while (true) {
 				try {
-					App.getInstance().getLobby().appendChat((String) inputStream.readObject());
+					message = (Message) inputStream.readObject();
 				} catch (final IOException ioe) {
 					disconnected();
 					break;
@@ -86,14 +98,28 @@ public class Client {
 					disconnected();
 					break;
 				}
+				
+				switch (message.getType()) {
+				case Message.CHAT:
+					lobby.appendChat(message.getUsername() + ": " + message.getMessage());
+					break;
+					
+				case Message.LOGOUT:
+					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
+					break;
+					
+				case Message.LOGIN:
+					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
+					break;
+
+				default:
+					break;
+				}
 			}
 		}
 		
 		private void disconnected() {
-			final App app = App.getInstance();
-			final GameLobbyView lobby = app.getLobby();
-			
-			app.setIsConnected(false);
+			App.getInstance().setIsConnected(false);
 			if (lobby.isShowing()) {
 				lobby.appendLog(Constants.DISCONNECTED);
 			} else {
