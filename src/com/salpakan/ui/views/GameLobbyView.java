@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Message;
-import com.salpakan.ui.components.RoomListModel;
+import com.salpakan.ui.components.DataListModel;
 import com.salpakan.ui.components.TimerOptionsPanel;
 import com.salpakan.utils.ComponentUtils;
 
@@ -39,10 +39,10 @@ public class GameLobbyView extends JPanel {
 
 	private final class CancelButtonActionListener implements ActionListener {
 		
-		private final RoomListModel model;
+		private final DataListModel model;
 		private final JList list;
 		
-		private CancelButtonActionListener(final RoomListModel model, final JList list) {
+		private CancelButtonActionListener(final DataListModel model, final JList list) {
 			this.model = model;
 			this.list = list;
 		}
@@ -65,10 +65,10 @@ public class GameLobbyView extends JPanel {
 
 	private final class JoinButtonActionListener implements ActionListener {
 		
-		private final RoomListModel model;
+		private final DataListModel model;
 		private final JList list;
 		
-		private JoinButtonActionListener(final RoomListModel model, final JList list) {
+		private JoinButtonActionListener(final DataListModel model, final JList list) {
 			this.model = model;
 			this.list = list;
 		}
@@ -91,10 +91,10 @@ public class GameLobbyView extends JPanel {
 
 	private final class CreateButtonActionListener implements ActionListener {
 
-		private final RoomListModel model;
+		private final DataListModel model;
 		private final JList list;
 		
-		private CreateButtonActionListener(final RoomListModel model, final JList list) {
+		private CreateButtonActionListener(final DataListModel model, final JList list) {
 			this.model = model;
 			this.list = list;
 		}
@@ -142,7 +142,7 @@ public class GameLobbyView extends JPanel {
 		final JPanel showCapturedRoom = initRoom(Constants.SHOW_CAPTURED);
 		final JPanel theBattlefieldRoom = initRoom(Constants.BATTLEFIELD);
 		
-		ComponentUtils.setSize(roomPanel, 0, Constants.WINDOW_HEIGHT / 4);
+		ComponentUtils.setSize(roomPanel, 0, Constants.WINDOW_HEIGHT / 3);
 		roomPanel.setLayout(new BoxLayout(roomPanel, BoxLayout.X_AXIS));
 		roomPanel.add(defaultRoom);
 		roomPanel.add(showEngagedRoom);
@@ -160,7 +160,7 @@ public class GameLobbyView extends JPanel {
 		final JButton joinButton = new JButton(Constants.JOIN_BUTTON);
 		final JButton cancelButton = new JButton(Constants.CANCEL_BUTTON);
 		final JScrollPane scrollPane = new JScrollPane();
-		final RoomListModel roomListModel = new RoomListModel();
+		final DataListModel roomListModel = new DataListModel();
 		
 		ComponentUtils.setCustomButton(createButton);
 		ComponentUtils.setCustomButton(joinButton);
@@ -177,7 +177,7 @@ public class GameLobbyView extends JPanel {
 		joinButton.addActionListener(new JoinButtonActionListener(roomListModel, list));
 		cancelButton.addActionListener(new CancelButtonActionListener(roomListModel, list));
 		
-		ComponentUtils.setSize(scrollPane, 120, 90);
+		ComponentUtils.setSize(scrollPane, 140, 90);
 		scrollPane.setViewportView(list);
 
 		ComponentUtils.setPanelBorder(room, roomName);
@@ -189,9 +189,18 @@ public class GameLobbyView extends JPanel {
 	
 	private void initPlayersPanel() {
 		final JPanel playersPanel = new JPanel();
+		final JList playersList = new JList();
+		final JScrollPane scrollPane = new JScrollPane();
+		final DataListModel playersListModel = new DataListModel();
+		
+		playersList.setModel(playersListModel);
+		
+		ComponentUtils.setSize(scrollPane, 180, 310);
+		scrollPane.setViewportView(playersList);
 
 		ComponentUtils.setSize(playersPanel, Constants.WINDOW_WIDTH / 5, 0);
 		ComponentUtils.setPanelBorder(playersPanel, Constants.PLAYERS);
+		playersPanel.add(scrollPane);
 		
 		add(playersPanel, BorderLayout.WEST);
 	}
@@ -201,7 +210,7 @@ public class GameLobbyView extends JPanel {
 		final JButton sendButton = new JButton(Constants.SEND_BUTTON);
 		final JPanel chatPanel = new JPanel();
 		chatField = new JTextField(42);
-		chatArea = new JTextArea(15, 46);
+		chatArea = new JTextArea(13, 47);
 		
 		ComponentUtils.setCustomTextArea(chatArea);
 		
@@ -221,7 +230,7 @@ public class GameLobbyView extends JPanel {
 	
 	private void initHelpPanel() {
 		final JPanel helpPanel = new JPanel();
-		logsArea = new JTextArea(17, 20);
+		logsArea = new JTextArea(15, 20);
 		
 		ComponentUtils.setCustomTextArea(logsArea);
 		

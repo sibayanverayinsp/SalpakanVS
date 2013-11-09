@@ -6,14 +6,10 @@ import javax.swing.ListModel;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
-public class RoomListModel implements ListModel {
+public class DataListModel implements ListModel {
 
 	private final Vector<String> dataList = new Vector<String>();
 	private final Vector<ListDataListener> listDataListener = new Vector<ListDataListener>();
-	
-	public RoomListModel() {
-		
-	}
 	
 	public void add(final String data) {
 		dataList.add(data);

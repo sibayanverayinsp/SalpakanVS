@@ -9,7 +9,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -17,9 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Client;
@@ -101,7 +97,7 @@ public class LoginView extends JPanel {
 		
 		//init login panel
 		ComponentUtils.setSize(loginPanel, 350, 250);
-		loginPanel.setBorder(BorderFactory.createCompoundBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), Constants.LOGIN_BUTTON.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(Font.SANS_SERIF, Font.BOLD, 15)), Constants.PADDING));
+		ComponentUtils.setPanelBorder(loginPanel, Constants.LOGIN_BUTTON.toUpperCase(), new Font(Font.SANS_SERIF, Font.BOLD, 15));
 
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.gridx = 0;

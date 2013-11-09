@@ -41,10 +41,7 @@ public class AppServer extends JFrame implements ActionListener {
 		
 		startStopButton.addActionListener(this);
 		
-		logsArea.setEditable(false);
-		logsArea.setFocusable(false);
-		logsArea.setFont(Constants.FONT);
-		logsArea.setLineWrap(true);
+		ComponentUtils.setCustomTextArea(logsArea);
 		
 		ComponentUtils.setPanelBorder(logsPanel, Constants.LOGS);
 		logsPanel.add(new JScrollPane(logsArea));

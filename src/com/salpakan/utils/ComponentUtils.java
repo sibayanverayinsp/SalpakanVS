@@ -36,11 +36,15 @@ public class ComponentUtils {
 	}
 	
 	public static void setPaddedBorder(final JComponent component) {
-		component.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.GRAY), Constants.PADDING));
+		component.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.GRAY), Constants.TEXTAREA_PADDING));
 	}
 	
 	public static void setPanelBorder(final JComponent component, final String title) {
-		component.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), title.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION));
+		setPanelBorder(component, title, null);
+	}
+	
+	public static void setPanelBorder(final JComponent component, final String title, final Font font) {
+		component.setBorder(BorderFactory.createTitledBorder(new EtchedBorder(EtchedBorder.LOWERED), title.toUpperCase(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, font));
 	}
 	
 	public static void setSize(final Component component, final int width, final int height) {
