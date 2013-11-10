@@ -11,6 +11,7 @@ import javax.swing.JTabbedPane;
 
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
+import com.salpakan.network.Client;
 import com.salpakan.network.Message;
 import com.salpakan.utils.ComponentUtils;
 
@@ -27,7 +28,10 @@ public class TabView extends JPanel {
 			}
 			
 			final JPanel mainPanel = app.getMainPanel();
-			app.getClient().sendMessage(new Message(Message.LOGOUT, app.getUsername(), Constants.LOGS_OUT.toLowerCase()));
+			final Client client = app.getClient();
+			final String username = app.getUsername();
+			client.sendMessage(new Message(Message.PLAYERS, username, Constants.LOGOUT_BUTTON));
+			client.sendMessage(new Message(Message.LOGOUT, username, Constants.LOGS_OUT.toLowerCase()));
 			app.clearCredentials();
 			app.getLoginView().clearFields();
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.LOGIN);

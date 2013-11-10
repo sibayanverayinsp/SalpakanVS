@@ -129,6 +129,8 @@ public class Server {
 		public synchronized void run() {
 			ClientThread client;
 			StringBuffer buffer;
+			String msg;
+			String user;
 			Message message;
 			int type;
 			
@@ -141,12 +143,20 @@ public class Server {
 					break;
 				}
 				
+				msg = message.getMessage();
 				type = message.getType();
+				user = message.getUsername();
 				if (type == Message.PLAYERS) {
 					buffer = new StringBuffer();
 					for(int i = 0, j = clients.size(); i < j; i++) {
 						client = clients.get(i);
-						buffer.append(client.username + "&");
+						if (msg.equals(Constants.LOGOUT_BUTTON)) {
+							if (!client.username.equals(user)) {
+								buffer.append(client.username + "&");
+							}
+						} else {
+							buffer.append(client.username + "&");
+						}
 					}
 					broadcast(new Message(type, username, buffer.toString()));
 				} else if (type == Message.LOGOUT) {

@@ -62,7 +62,7 @@ public class LoginView extends JPanel {
 			
 			app.setIsConnected(true);
 			//TODO
-			app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), "players"));
+			app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), Constants.LOGIN_BUTTON));
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
 		}
 	}
