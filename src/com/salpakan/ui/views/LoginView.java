@@ -13,6 +13,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -44,24 +45,27 @@ public class LoginView extends JPanel {
 				password.setText("");
 				return;
 			} else if (user.contains("&")) {
-				//TODO
-				app.alertError("Username cannot contain '&'");
+				app.alertError(Constants.CANNOT_CONTAIN);
 				password.setText("");
 				return;
 			}
 			
 			final JPanel mainPanel = app.getMainPanel();
-			
+			final String host = JOptionPane.showInputDialog(LoginView.this, "Please enter host address: ", "", JOptionPane.QUESTION_MESSAGE);
 			app.setUsername(user);
 			app.setPassword(pass);
-			app.setClient(new Client(Constants.DEFAULT_HOST, Constants.DEFAULT_PORT));
+			
+			if (host == null || host.trim().length() == 0) {
+				return;
+			}
+			
+			app.setClient(new Client(host, Constants.DEFAULT_PORT));
 			
 			if (!app.getClient().start()) {
 				return;
 			}
 			
 			app.setIsConnected(true);
-			//TODO
 			app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), Constants.LOGIN_BUTTON));
 			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
 		}

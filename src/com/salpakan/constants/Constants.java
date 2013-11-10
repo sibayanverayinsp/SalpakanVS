@@ -94,6 +94,7 @@ public final class Constants {
 	public static final String STREAM_ERROR = "Error creating streams!";
 	public static final String WRITE_ERROR = "Error writing to streams!";
 	public static final String DISCONNECTED = "Disconnected from the server!";
+	public static final String CANNOT_CONTAIN = "Username cannot contain '&'";
 	
 	/*
 	 * 		Server Strings
