@@ -118,6 +118,7 @@ public class Server {
 				username = (String) inputStream.readObject();
 				
 				broadcast(new Message(Message.LOGIN, username, Constants.LOGS_IN.toLowerCase()));
+				appServer.appendLog("<" + username + "> " + this.socket.getInetAddress().getHostAddress());
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 				return;
