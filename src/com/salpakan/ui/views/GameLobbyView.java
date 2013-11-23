@@ -18,6 +18,7 @@ import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Message;
 import com.salpakan.ui.components.DataListModel;
+import com.salpakan.ui.components.Room;
 import com.salpakan.ui.components.TimerOptionsPanel;
 import com.salpakan.utils.ComponentUtils;
 
@@ -40,12 +41,12 @@ public class GameLobbyView extends JPanel {
 
 	private final class CancelButtonActionListener implements ActionListener {
 		
-		private final DataListModel model;
 		private final JList list;
+		private final DataListModel model;
 		
-		private CancelButtonActionListener(final DataListModel model, final JList list) {
-			this.model = model;
-			this.list = list;
+		private CancelButtonActionListener(final Room room) {
+			list = room.getList();
+			model = (DataListModel) list.getModel();
 		}
 		
 		@Override
@@ -66,12 +67,12 @@ public class GameLobbyView extends JPanel {
 
 	private final class JoinButtonActionListener implements ActionListener {
 		
-		private final DataListModel model;
 		private final JList list;
+		private final DataListModel model;
 		
-		private JoinButtonActionListener(final DataListModel model, final JList list) {
-			this.model = model;
-			this.list = list;
+		private JoinButtonActionListener(final Room room) {
+			list = room.getList();
+			model = (DataListModel) list.getModel();
 		}
 		
 		@Override
@@ -92,30 +93,53 @@ public class GameLobbyView extends JPanel {
 
 	private final class CreateButtonActionListener implements ActionListener {
 
-		private final DataListModel model;
+		private final JButton createButton;
 		private final JList list;
+		private final DataListModel model;
 		
-		private CreateButtonActionListener(final DataListModel model, final JList list) {
-			this.model = model;
-			this.list = list;
+		private final String name;
+		
+		private CreateButtonActionListener(final Room room) {
+			createButton = room.getCreateButton();
+			list = room.getList();
+			model = (DataListModel) list.getModel();
+			name = room.getName();
 		}
 		
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
-			if (!App.getInstance().isConnected()) {
+			if (!App.getInstance().isConnected() || isGameCreated) {
 				return;
 			}
 			
-			if (!isGameCreated) {
-				final String user = App.getInstance().getUsername();
-				if (!model.contains(user)) {
-					final TimerOptionsPanel timerPanel = new TimerOptionsPanel();
-					if (JOptionPane.showConfirmDialog(GameLobbyView.this, timerPanel, Constants.TIMER_OPTIONS, JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-						model.add(timerPanel.getSelectedTime() + " " + user);
-						list.clearSelection();
-						isGameCreated = true;
-					}
-				}
+			final String user = App.getInstance().getUsername();
+			if (model.contains(user)) {
+				return;
+			}
+			
+			final TimerOptionsPanel timerPanel = new TimerOptionsPanel();
+			if (JOptionPane.showConfirmDialog(GameLobbyView.this, timerPanel, Constants.TIMER_OPTIONS, JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+				final String data = timerPanel.getSelectedTime() + " " + user;
+//				game = new GameServer(0);
+//				new Thread(new Runnable() {
+//					
+//					@Override
+//					public synchronized void run() {
+//						game.start();
+//						game = null;
+//						model.remove(data);
+//						createButton.setEnabled(true);
+//					}
+//				}).start();
+//				final Player player = new Player(Constants.DEFAULT_HOST, game.getPort());
+//				if (!player.start()) {
+//					return;
+//				}
+//				player.sendMessage(new Message(Message.JOIN, App.getInstance().getUsername(), "joined!"));
+				isGameCreated = true;
+				createButton.setEnabled(false);
+				App.getInstance().getClient().sendMessage(new Message(Message.GAME_CREATED, App.getInstance().getUsername(), name + "&" + data));
+				list.clearSelection();
 			}
 		}
 	}
@@ -124,9 +148,16 @@ public class GameLobbyView extends JPanel {
 	private JTextArea chatArea;
 	private JTextArea logsArea;
 	
+	private Room defaultRoom;
+	private Room showCapturedRoom;
+	private Room showEngagedRoom;
+	private Room theBattlefieldRoom;
+	
 	private DataListModel playersListModel;
 	
 	private boolean isGameCreated;
+	
+//	private GameServer game;
 
 	public GameLobbyView() {
 		setLayout(new BorderLayout());
@@ -138,12 +169,23 @@ public class GameLobbyView extends JPanel {
 		isGameCreated = false;
 	}
 	
+	private void addActionToRoom(final Room room) {
+		room.addCreateAction(new CreateButtonActionListener(room));
+		room.addJoinAction(new JoinButtonActionListener(room));
+		room.addCancelAction(new CancelButtonActionListener(room));
+	}
+	
 	private void initRoomPanel() {
 		final JPanel roomPanel = new JPanel();
-		final JPanel defaultRoom = initRoom(Constants.DEFAULT_ROOM);
-		final JPanel showEngagedRoom = initRoom(Constants.SHOW_ENGAGED);
-		final JPanel showCapturedRoom = initRoom(Constants.SHOW_CAPTURED);
-		final JPanel theBattlefieldRoom = initRoom(Constants.BATTLEFIELD);
+		defaultRoom = new Room(Constants.DEFAULT_ROOM);
+		showEngagedRoom = new Room(Constants.SHOW_ENGAGED);
+		showCapturedRoom = new Room(Constants.SHOW_CAPTURED);
+		theBattlefieldRoom = new Room(Constants.BATTLEFIELD);
+		
+		addActionToRoom(defaultRoom);
+		addActionToRoom(showEngagedRoom);
+		addActionToRoom(showCapturedRoom);
+		addActionToRoom(theBattlefieldRoom);
 		
 		ComponentUtils.setSize(roomPanel, 0, Constants.WINDOW_HEIGHT / 3);
 		roomPanel.setLayout(new BoxLayout(roomPanel, BoxLayout.X_AXIS));
@@ -153,41 +195,6 @@ public class GameLobbyView extends JPanel {
 		roomPanel.add(theBattlefieldRoom);
 		
 		add(roomPanel, BorderLayout.NORTH);
-	}
-	
-	private JPanel initRoom(final String roomName) {
-		final JPanel room = new JPanel();
-		final JList list = new JList();
-		final Container buttonContainer = new Container();
-		final JButton createButton = new JButton(Constants.CREATE_BUTTON);
-		final JButton joinButton = new JButton(Constants.JOIN_BUTTON);
-		final JButton cancelButton = new JButton(Constants.CANCEL_BUTTON);
-		final JScrollPane scrollPane = new JScrollPane();
-		final DataListModel roomListModel = new DataListModel();
-		
-		ComponentUtils.setCustomButton(createButton);
-		ComponentUtils.setCustomButton(joinButton);
-		ComponentUtils.setCustomButton(cancelButton);
-
-		buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.Y_AXIS));
-		buttonContainer.add(createButton);
-		buttonContainer.add(joinButton);
-		buttonContainer.add(cancelButton);
-		
-		list.setModel(roomListModel);
-		
-		createButton.addActionListener(new CreateButtonActionListener(roomListModel, list));
-		joinButton.addActionListener(new JoinButtonActionListener(roomListModel, list));
-		cancelButton.addActionListener(new CancelButtonActionListener(roomListModel, list));
-		
-		ComponentUtils.setSize(scrollPane, 140, 90);
-		scrollPane.setViewportView(list);
-
-		ComponentUtils.setPanelBorder(room, roomName);
-		room.add(scrollPane);
-		room.add(buttonContainer);
-		
-		return room;
 	}
 	
 	private void initPlayersPanel() {
@@ -247,6 +254,57 @@ public class GameLobbyView extends JPanel {
 	public void appendChat(final String message) {
 		chatArea.append(message + "\n");
 		chatArea.setCaretPosition(chatArea.getText().length() - 1);
+	}
+	
+	public void refreshRoomGameList(final String message) {
+		final String[] roomGames = message.split("&");
+		DataListModel model = null;
+		if (roomGames[0].equals(Constants.DEFAULT_ROOM)) {
+			model = ((DataListModel) defaultRoom.getList().getModel());
+		} else if (roomGames[0].equals(Constants.SHOW_ENGAGED)) {
+			model = ((DataListModel) showEngagedRoom.getList().getModel());
+		} else if (roomGames[0].equals(Constants.SHOW_CAPTURED)) {
+			model = ((DataListModel) showCapturedRoom.getList().getModel());
+		} else {
+			model = ((DataListModel) theBattlefieldRoom.getList().getModel());
+		}
+		model.clear();
+		for (int i = 1, j = roomGames.length; i < j; i++) {
+			model.add(roomGames[i]);
+		}
+	}
+	
+	public void refreshAllRoomGameList(final String message) {
+		final String[] room = message.split(",");
+		String[] roomGames = null;
+		roomGames = room[0].split("&");
+		for (int i = 0, j = roomGames.length; i < j; i++) {
+			if (roomGames[i].equals(" ")) {
+				break;
+			}
+			((DataListModel) defaultRoom.getList().getModel()).add(roomGames[i]);
+		}
+		roomGames = room[1].split("&");
+		for (int i = 0, j = roomGames.length; i < j; i++) {
+			if (roomGames[i].equals(" ")) {
+				break;
+			}
+			((DataListModel) showEngagedRoom.getList().getModel()).add(roomGames[i]);
+		}
+		roomGames = room[2].split("&");
+		for (int i = 0, j = roomGames.length; i < j; i++) {
+			if (roomGames[i].equals(" ")) {
+				break;
+			}
+			((DataListModel) showCapturedRoom.getList().getModel()).add(roomGames[i]);
+		}
+		roomGames = room[3].split("&");
+		for (int i = 0, j = roomGames.length; i < j; i++) {
+			if (roomGames[i].equals(" ")) {
+				break;
+			}
+			((DataListModel) theBattlefieldRoom.getList().getModel()).add(roomGames[i]);
+		}
 	}
 	
 	public void appendLog(final String log) {

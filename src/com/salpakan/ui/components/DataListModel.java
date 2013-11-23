@@ -27,6 +27,11 @@ public class DataListModel implements ListModel {
 		}
 	}
 	
+	public void remove(final String data) {
+		final int index = dataList.indexOf(data);
+		remove(index);
+	}
+	
 	public boolean contains(final String data) {
 		return dataList.contains(data);
 	}

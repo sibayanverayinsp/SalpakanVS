@@ -10,7 +10,7 @@ import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.ui.views.GameLobbyView;
 
-public class Client {
+public class Player {
 
 	private ObjectInputStream inputStream;
 	private ObjectOutputStream outputStream;
@@ -19,7 +19,7 @@ public class Client {
 	private final int port;
 	private Socket socket;
 	
-	public Client(final String host, final int port) {
+	public Player(final String host, final int port) {
 		this.host = host;
 		this.port = port;
 	}
@@ -43,7 +43,7 @@ public class Client {
 			return false;
 		}
 		
-		new ListenFromServer().start();
+		new ListenFromGameServer().start();
 		
 		try {
 			outputStream.writeObject(App.getInstance().getUsername());
@@ -78,12 +78,12 @@ public class Client {
 		}
 	}
 	
-	private final class ListenFromServer extends Thread {
+	private final class ListenFromGameServer extends Thread {
 		
 		private Message message;
 		private final GameLobbyView lobby;
 		
-		private ListenFromServer() {
+		private ListenFromGameServer() {
 			lobby = App.getInstance().getLobby();
 		}
 		
@@ -100,28 +100,8 @@ public class Client {
 				}
 				
 				switch (message.getType()) {
-				case Message.CHAT:
-					lobby.appendChat(message.getUsername() + ": " + message.getMessage());
-					break;
-					
 				case Message.LOGOUT:
 					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
-					break;
-					
-				case Message.LOGIN:
-					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
-					break;
-					
-				case Message.PLAYERS:
-					lobby.refreshPlayersList(message.getMessage());
-					break;
-					
-				case Message.GAME_CREATED:
-					lobby.refreshRoomGameList(message.getMessage());
-					break;
-					
-				case Message.ROOM_GAMES:
-					lobby.refreshAllRoomGameList(message.getMessage());
 					break;
 
 				default:
