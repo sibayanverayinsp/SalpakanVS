@@ -23,21 +23,7 @@ import com.salpakan.ui.components.TimerOptionsPanel;
 import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
-public class GameLobbyView extends JPanel {
-	
-	private final class SendButtonActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(final ActionEvent evt) {
-			final App app = App.getInstance();
-			if (!app.isConnected()) {
-				return;
-			}
-			
-			app.getClient().sendMessage(new Message(Message.CHAT, app.getUsername(), chatField.getText().trim()));
-			chatField.setText("");
-			chatField.requestFocusInWindow();
-		}
-	}
+public class GameLobbyView extends JPanel implements ActionListener {
 
 	private final class CancelButtonActionListener implements ActionListener {
 		
@@ -225,7 +211,8 @@ public class GameLobbyView extends JPanel {
 		ComponentUtils.setCustomTextArea(chatArea);
 		
 		chatField.setFont(Constants.FONT);
-		sendButton.addActionListener(new SendButtonActionListener());
+		chatField.addActionListener(this);
+		sendButton.addActionListener(this);
 		
 		chatContainer.setLayout(new BorderLayout());
 		chatContainer.add(chatField, BorderLayout.WEST);
@@ -323,6 +310,18 @@ public class GameLobbyView extends JPanel {
 		for (int i = 0, j = players.length; i < j; i++) {
 			playersListModel.add(players[i]);
 		}
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent evt) {
+		final App app = App.getInstance();
+		if (!app.isConnected()) {
+			return;
+		}
+		
+		app.getClient().sendMessage(new Message(Message.CHAT, app.getUsername(), chatField.getText().trim()));
+		chatField.setText("");
+		chatField.requestFocusInWindow();
 	}
 	
 }
