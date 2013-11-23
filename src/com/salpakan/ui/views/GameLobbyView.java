@@ -118,25 +118,12 @@ public class GameLobbyView extends JPanel implements ActionListener {
 		chatArea.setCaretPosition(chatArea.getText().length() - 1);
 	}
 	
-	public void refreshRoomGameList(final String message) {
-		final String[] roomGames = message.split("&");
-		DataListModel model = null;
-		if (roomGames[0].equals(Constants.DEFAULT_ROOM)) {
-			model = ((DataListModel) defaultRoom.getList().getModel());
-		} else if (roomGames[0].equals(Constants.SHOW_ENGAGED)) {
-			model = ((DataListModel) showEngagedRoom.getList().getModel());
-		} else if (roomGames[0].equals(Constants.SHOW_CAPTURED)) {
-			model = ((DataListModel) showCapturedRoom.getList().getModel());
-		} else {
-			model = ((DataListModel) theBattlefieldRoom.getList().getModel());
-		}
-		model.clear();
-		for (int i = 1, j = roomGames.length; i < j; i++) {
-			model.add(roomGames[i]);
-		}
+	public void addGameToRoom(final String message) {
+		final String[] messageArray = message.split("&");
+		((DataListModel) getRoom(messageArray[0]).getList().getModel()).add(messageArray[1]);
 	}
 	
-	public void refreshAllRoomGameList(final String message) {
+	public void addGamesToAllRooms(final String message) {
 		final String[] room = message.split(",");
 		String[] roomGames = null;
 		roomGames = room[0].split("&");
@@ -179,12 +166,29 @@ public class GameLobbyView extends JPanel implements ActionListener {
 		logsArea.setText("");
 	}
 	
+	private Room getRoom(final String roomName) {
+		if (roomName.equals(Constants.DEFAULT_ROOM)) {
+			return defaultRoom;
+		} else if (roomName.equals(Constants.SHOW_ENGAGED)) {
+			return showEngagedRoom;
+		} else if (roomName.equals(Constants.SHOW_CAPTURED)) {
+			return showCapturedRoom;
+		} else {
+			return theBattlefieldRoom;
+		}
+	}
+	
 	public void refreshPlayersList(final String message) {
 		final String[] players = message.split("&");
 		playersListModel.clear();
 		for (int i = 0, j = players.length; i < j; i++) {
 			playersListModel.add(players[i]);
 		}
+	}
+	
+	public void removeGameFromRoom(final String message) {
+		final String[] messageArray = message.split("&");
+		((DataListModel) getRoom(messageArray[0]).getList().getModel()).remove(messageArray[1]);
 	}
 
 	@Override

@@ -117,11 +117,15 @@ public class Client {
 					break;
 					
 				case Message.GAME_CREATED:
-					lobby.refreshRoomGameList(message.getMessage());
+					lobby.addGameToRoom(message.getMessage());
+					break;
+					
+				case Message.GAME_CANCELLED:
+					lobby.removeGameFromRoom(message.getMessage());
 					break;
 					
 				case Message.ROOM_GAMES:
-					lobby.refreshAllRoomGameList(message.getMessage());
+					lobby.addGamesToAllRooms(message.getMessage());
 					break;
 
 				default:

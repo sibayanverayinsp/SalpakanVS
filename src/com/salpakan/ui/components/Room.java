@@ -54,8 +54,9 @@ public class Room extends JPanel {
 //				player.sendMessage(new Message(Message.JOIN, App.getInstance().getUsername(), "joined!"));
 				isGameCreated = true;
 				createButton.setEnabled(false);
-				App.getInstance().getClient().sendMessage(new Message(Message.GAME_CREATED, App.getInstance().getUsername(), roomName + "&" + data));
+				cancelButton.setEnabled(true);
 				list.clearSelection();
+				App.getInstance().getClient().sendMessage(new Message(Message.GAME_CREATED, user, roomName + "&" + data));
 			}
 		}
 	}
@@ -67,14 +68,21 @@ public class Room extends JPanel {
 			if (!App.getInstance().isConnected()) {
 				return;
 			}
-			
-			final int index = list.getSelectedIndex();
+
 			final DataListModel model = (DataListModel) list.getModel();
-			final String username = model.getElementAt(index).toString();
-			if (username.substring(username.indexOf(" ") + 1).equals(App.getInstance().getUsername())) {
-				model.remove(index);
-				list.clearSelection();
-				isGameCreated = false;
+			final String user = App.getInstance().getUsername();
+			String username;
+			
+			for (int i = 0, j = model.getSize(); i < j; i++) {
+				username = model.getElementAt(i).toString();
+				if (username.substring(username.indexOf(" ") + 1).equals(user)) {
+					model.remove(i);
+					isGameCreated = false;
+					cancelButton.setEnabled(false);
+					createButton.setEnabled(true);
+					App.getInstance().getClient().sendMessage(new Message(Message.GAME_CANCELLED, user, roomName + "&" + username));
+					break;
+				}
 			}
 		}
 	}
@@ -119,9 +127,11 @@ public class Room extends JPanel {
 		joinButton = new JButton(Constants.JOIN_BUTTON);
 		cancelButton = new JButton(Constants.CANCEL_BUTTON);
 		
+		cancelButton.setEnabled(false);
+		
 		createButton.addActionListener(new CreateButtonActionListener());
-		joinButton.addActionListener(new CancelButtonActionListener());
-		cancelButton.addActionListener(new JoinButtonActionListener());
+		cancelButton.addActionListener(new CancelButtonActionListener());
+		joinButton.addActionListener(new JoinButtonActionListener());
 		
 		ComponentUtils.setCustomButton(createButton);
 		ComponentUtils.setCustomButton(joinButton);

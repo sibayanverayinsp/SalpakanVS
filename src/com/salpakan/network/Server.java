@@ -155,6 +155,7 @@ public class Server {
 			StringBuffer buffer;
 			String msg;
 			String user;
+			String[] msgArray;
 			Message message;
 			int type;
 			
@@ -187,26 +188,9 @@ public class Server {
 					break;
 					
 				case Message.GAME_CREATED:
-					final String[] msgArray = msg.split("&");
-					ArrayList<String> room = null;
-					String game;
-					buffer = new StringBuffer();
-					if (msgArray[0].equals(Constants.DEFAULT_ROOM)) {
-						room = defaultRoomGames;
-					} else if (msgArray[0].equals(Constants.SHOW_ENGAGED)) {
-						room = showEngagedRoomGames;
-					} else if (msgArray[0].equals(Constants.SHOW_CAPTURED)) {
-						room = showCapturedRoomGames;
-					} else {
-						room = theBattlefieldRoomGames;
-					}
-					room.add(msgArray[1]);
-					buffer.append(msgArray[0] + "&");
-					for (int i = 0, j = room.size(); i < j; i++) {
-						game = room.get(i);
-						buffer.append(game + "&");
-						broadcast(new Message(type, username, buffer.toString()));
-					}
+					msgArray = msg.split("&");
+					getRoomArrayList(msgArray[0]).add(msgArray[1]);
+					broadcast(new Message(type, username, msg));
 					break;
 					
 				case Message.ROOM_GAMES:
@@ -241,6 +225,12 @@ public class Server {
 					buffer.append(",");
 					broadcastToClient(new Message(type, user, buffer.toString()));
 					break;
+					
+				case Message.GAME_CANCELLED:
+					msgArray = msg.split("&");
+					getRoomArrayList(msgArray[0]).remove(msgArray[1]);
+					broadcast(new Message(type, username, msg));
+					break;
 
 				default:
 					broadcast(message);
@@ -262,6 +252,18 @@ public class Server {
 				socket.close();
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
+			}
+		}
+		
+		private ArrayList<String> getRoomArrayList(final String roomName) {
+			if (roomName.equals(Constants.DEFAULT_ROOM)) {
+				return defaultRoomGames;
+			} else if (roomName.equals(Constants.SHOW_ENGAGED)) {
+				return showEngagedRoomGames;
+			} else if (roomName.equals(Constants.SHOW_CAPTURED)) {
+				return showCapturedRoomGames;
+			} else {
+				return theBattlefieldRoomGames;
 			}
 		}
 		
