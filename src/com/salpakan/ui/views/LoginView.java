@@ -136,7 +136,7 @@ public class LoginView extends JPanel implements ActionListener {
 		
 		app.setIsConnected(true);
 		app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), Constants.LOGIN_BUTTON));
-		app.getClient().sendMessage(new Message(Message.ROOM_GAMES, app.getUsername(), "get room games"));
+		app.getClient().sendMessage(new Message(Message.ROOM_GAMES_LOGIN, app.getUsername(), "get room games"));
 		((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
 	}
 	

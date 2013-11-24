@@ -121,10 +121,11 @@ public class Client {
 					break;
 					
 				case Message.GAME_CANCELLED:
+				case Message.ROOM_GAMES_LOGOUT:
 					lobby.removeGameFromRoom(message.getMessage());
 					break;
 					
-				case Message.ROOM_GAMES:
+				case Message.ROOM_GAMES_LOGIN:
 					lobby.addGamesToAllRooms(message.getMessage());
 					break;
 

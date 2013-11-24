@@ -13,9 +13,10 @@ public class Message implements Serializable {
 	public static final int LOGIN = 2;
 	public static final int PLAYERS = 3;
 	public static final int GAME_CREATED = 4;
-	public static final int ROOM_GAMES = 5;
+	public static final int ROOM_GAMES_LOGIN = 5;
 	public static final int JOIN = 6;
 	public static final int GAME_CANCELLED = 7;
+	public static final int ROOM_GAMES_LOGOUT = 8;
 	
 	private String date;
 	private String username;

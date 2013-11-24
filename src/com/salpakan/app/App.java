@@ -21,11 +21,13 @@ public class App {
 	private Client client;
 	
 	private boolean isConnected;
+	private boolean isGameCreated;
 	
 	public App() {
 		me = this;
 		client = null;
 		isConnected = false;
+		isGameCreated = false;
 		mainView = new MainView();
 		mainView.setVisible(true);
 	}
@@ -76,12 +78,20 @@ public class App {
 		return isConnected;
 	}
 	
+	public boolean isGameCreated() {
+		return isGameCreated;
+	}
+	
 	public void setClient(final Client client) {
 		this.client = client;
 	}
 	
 	public void setIsConnected(final boolean isConnected) {
 		this.isConnected = isConnected;
+	}
+	
+	public void setIsGameCreated(final boolean isGameCreated) {
+		this.isGameCreated = isGameCreated;
 	}
 	
 	public void setPassword(final String password) {

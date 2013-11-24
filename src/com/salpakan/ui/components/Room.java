@@ -23,11 +23,12 @@ public class Room extends JPanel {
 
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
-			if (!App.getInstance().isConnected() || isGameCreated) {
+			final App app = App.getInstance();
+			if (!app.isConnected() || app.isGameCreated()) {
 				return;
 			}
 			
-			final String user = App.getInstance().getUsername();
+			final String user = app.getUsername();
 			final DataListModel model = (DataListModel) list.getModel();
 			if (model.contains(user)) {
 				return;
@@ -52,11 +53,11 @@ public class Room extends JPanel {
 //					return;
 //				}
 //				player.sendMessage(new Message(Message.JOIN, App.getInstance().getUsername(), "joined!"));
-				isGameCreated = true;
+				app.setIsGameCreated(true);
 				createButton.setEnabled(false);
 				cancelButton.setEnabled(true);
 				list.clearSelection();
-				App.getInstance().getClient().sendMessage(new Message(Message.GAME_CREATED, user, roomName + "&" + data));
+				app.getClient().sendMessage(new Message(Message.GAME_CREATED, user, roomName + "&" + data));
 			}
 		}
 	}
@@ -65,22 +66,23 @@ public class Room extends JPanel {
 		
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
-			if (!App.getInstance().isConnected()) {
+			final App app = App.getInstance();
+			if (!app.isConnected()) {
 				return;
 			}
 
 			final DataListModel model = (DataListModel) list.getModel();
-			final String user = App.getInstance().getUsername();
+			final String user = app.getUsername();
 			String username;
 			
 			for (int i = 0, j = model.getSize(); i < j; i++) {
 				username = model.getElementAt(i).toString();
 				if (username.substring(username.indexOf(" ") + 1).equals(user)) {
 					model.remove(i);
-					isGameCreated = false;
+					app.setIsGameCreated(false);
 					cancelButton.setEnabled(false);
 					createButton.setEnabled(true);
-					App.getInstance().getClient().sendMessage(new Message(Message.GAME_CANCELLED, user, roomName + "&" + username));
+					app.getClient().sendMessage(new Message(Message.GAME_CANCELLED, user, roomName + "&" + username));
 					break;
 				}
 			}
@@ -91,17 +93,18 @@ public class Room extends JPanel {
 		
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
-			if (!App.getInstance().isConnected()) {
+			final App app = App.getInstance();
+			if (!app.isConnected()) {
 				return;
 			}
 			
 			final int index = list.getSelectedIndex();
 			final DataListModel model = (DataListModel) list.getModel();
 			final String username = model.getElementAt(index).toString();
-			if (!username.substring(username.indexOf(" ") + 1).equals(App.getInstance().getUsername())) {
+			if (!username.substring(username.indexOf(" ") + 1).equals(app.getUsername())) {
 				model.remove(index);
 				list.clearSelection();
-				isGameCreated = false;
+				app.setIsGameCreated(false);
 			}
 		}
 	}
@@ -112,7 +115,6 @@ public class Room extends JPanel {
 	private JList list;
 	
 	private String roomName;
-	private boolean isGameCreated;
 	
 //	private GameServer game;
 	

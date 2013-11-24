@@ -193,7 +193,7 @@ public class Server {
 					broadcast(new Message(type, username, msg));
 					break;
 					
-				case Message.ROOM_GAMES:
+				case Message.ROOM_GAMES_LOGIN:
 					buffer = new StringBuffer();
 					for (int i = 0, j = defaultRoomGames.size(); i < j; i++) {
 						buffer.append(defaultRoomGames.get(i) + "&");
@@ -231,6 +231,30 @@ public class Server {
 					getRoomArrayList(msgArray[0]).remove(msgArray[1]);
 					broadcast(new Message(type, username, msg));
 					break;
+					
+				case Message.ROOM_GAMES_LOGOUT:
+					String room = null;
+					String removedGame = null;
+					if ((removedGame = removeFromRoom(defaultRoomGames, user)) == null) {
+						if ((removedGame = removeFromRoom(showEngagedRoomGames, user)) == null) {
+							if ((removedGame = removeFromRoom(showCapturedRoomGames, user)) == null) {
+								if ((removedGame = removeFromRoom(theBattlefieldRoomGames, user)) != null) {
+									room = Constants.BATTLEFIELD;
+								}
+							} else {
+								room = Constants.SHOW_CAPTURED;
+							}
+						} else {
+							room = Constants.SHOW_ENGAGED;
+						}
+					} else {
+						room = Constants.DEFAULT_ROOM;
+					}
+					
+					if (room != null) {
+						broadcast(new Message(Message.GAME_CANCELLED, user, room + "&" + removedGame));
+					}
+					break;
 
 				default:
 					broadcast(message);
@@ -265,6 +289,19 @@ public class Server {
 			} else {
 				return theBattlefieldRoomGames;
 			}
+		}
+		
+		private String removeFromRoom(final ArrayList<String> roomGames, final String user) {
+			String username;
+			String removed = null;
+			for (int i = 0, j = roomGames.size(); i < j; i++) {
+				username = roomGames.get(i);
+				if (username.substring(username.indexOf(" ") + 1).equals(user)) {
+					removed = roomGames.remove(i);
+					break;
+				}
+			}
+			return removed;
 		}
 		
 		private boolean writeMsg(final Message message) {
