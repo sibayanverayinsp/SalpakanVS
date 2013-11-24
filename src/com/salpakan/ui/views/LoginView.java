@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -16,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.network.Client;
@@ -118,7 +120,7 @@ public class LoginView extends JPanel implements ActionListener {
 		}
 		
 		final JPanel mainPanel = app.getMainPanel();
-		final String host = JOptionPane.showInputDialog(LoginView.this, "Please enter host address: ", "", JOptionPane.QUESTION_MESSAGE);
+		final String host = (String) JOptionPane.showInputDialog(LoginView.this, "Please enter host address: ", "", JOptionPane.QUESTION_MESSAGE, null, null, "localhost");
 		app.setUsername(user);
 		app.setPassword(pass);
 		
