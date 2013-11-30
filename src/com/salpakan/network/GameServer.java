@@ -98,7 +98,7 @@ public class GameServer {
 				inputStream = new ObjectInputStream(socket.getInputStream());
 				username = (String) inputStream.readObject();
 				
-				broadcast(new Message(Message.JOIN, username, username + " joined!"));
+				broadcast(new Message(Message.JOIN_GAME, username, username + " joined!"));
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 				return;

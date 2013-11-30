@@ -1,6 +1,7 @@
 package com.salpakan.ui.components;
 
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +11,7 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.EmptyBorder;
 
 import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
@@ -24,7 +26,7 @@ public class Room extends JPanel {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
 			final App app = App.getInstance();
-			if (!app.isConnected() || app.isGameCreated()) {
+			if (!app.isConnected() || app.isGameCreated() || app.joinedAGame()) {
 				return;
 			}
 			
@@ -55,9 +57,33 @@ public class Room extends JPanel {
 //				player.sendMessage(new Message(Message.JOIN, App.getInstance().getUsername(), "joined!"));
 				app.setIsGameCreated(true);
 				createButton.setEnabled(false);
+				joinButton.setEnabled(true);
 				cancelButton.setEnabled(true);
 				list.clearSelection();
 				app.getClient().sendMessage(new Message(Message.GAME_CREATED, user, roomName + "&" + data));
+			}
+		}
+	}
+
+	private final class JoinButtonActionListener implements ActionListener {
+		
+		@Override
+		public void actionPerformed(final ActionEvent evt) {
+			final App app = App.getInstance();
+			final int index = list.getSelectedIndex();
+			if (!app.isConnected() || app.isGameCreated() || index < 0) {
+				return;
+			}
+			
+			final DataListModel model = (DataListModel) list.getModel();
+			final String username = model.getElementAt(index).toString();
+			if (!username.substring(username.indexOf(" ") + 1).equals(app.getUsername())) {
+				app.setJoinedAGame(true);
+				createButton.setEnabled(true);
+				joinButton.setEnabled(false);
+				cancelButton.setEnabled(false);
+				list.clearSelection();
+				app.getClient().sendMessage(new Message(Message.JOIN_GAME, app.getUsername(), roomName + "&" + username));
 			}
 		}
 	}
@@ -67,7 +93,7 @@ public class Room extends JPanel {
 		@Override
 		public void actionPerformed(final ActionEvent evt) {
 			final App app = App.getInstance();
-			if (!app.isConnected()) {
+			if (!app.isConnected() || !app.isGameCreated()) {
 				return;
 			}
 
@@ -78,33 +104,13 @@ public class Room extends JPanel {
 			for (int i = 0, j = model.getSize(); i < j; i++) {
 				username = model.getElementAt(i).toString();
 				if (username.substring(username.indexOf(" ") + 1).equals(user)) {
-					model.remove(i);
 					app.setIsGameCreated(false);
-					cancelButton.setEnabled(false);
 					createButton.setEnabled(true);
+					joinButton.setEnabled(true);
+					cancelButton.setEnabled(false);
 					app.getClient().sendMessage(new Message(Message.GAME_CANCELLED, user, roomName + "&" + username));
 					break;
 				}
-			}
-		}
-	}
-
-	private final class JoinButtonActionListener implements ActionListener {
-		
-		@Override
-		public void actionPerformed(final ActionEvent evt) {
-			final App app = App.getInstance();
-			if (!app.isConnected()) {
-				return;
-			}
-			
-			final int index = list.getSelectedIndex();
-			final DataListModel model = (DataListModel) list.getModel();
-			final String username = model.getElementAt(index).toString();
-			if (!username.substring(username.indexOf(" ") + 1).equals(app.getUsername())) {
-				model.remove(index);
-				list.clearSelection();
-				app.setIsGameCreated(false);
 			}
 		}
 	}
@@ -113,6 +119,7 @@ public class Room extends JPanel {
 	private JButton joinButton;
 	private JButton cancelButton;
 	private JList list;
+	private JList listVersus;
 	
 	private String roomName;
 	
@@ -120,11 +127,31 @@ public class Room extends JPanel {
 	
 	public Room(final String roomName) {
 		this.roomName = roomName;
-		
-		final Container buttonContainer = new Container();
+		setLayout(new GridLayout(2, 1));
+		ComponentUtils.setPaddedPanelBorder(this, roomName);
+		initRoom();
+		initRoomVersus();
+	}
+	
+	private void initRoom() {
+		final Container roomContainer = new Container();
 		final JScrollPane scrollPane = new JScrollPane();
-		final DataListModel roomListModel = new DataListModel();
-		list = new JList();
+		
+		list = new JList(new DataListModel());
+		
+		scrollPane.setViewportView(list);
+		ComponentUtils.setBorderMargin(scrollPane, new EmptyBorder(0, 0, 0, 5));
+		
+		roomContainer.setLayout(new BoxLayout(roomContainer, BoxLayout.X_AXIS));
+		roomContainer.add(scrollPane);
+		roomContainer.add(initButtons());
+
+		add(roomContainer);
+	}
+	
+	private Container initButtons() {
+		final Container buttonContainer = new Container();
+		
 		createButton = new JButton(Constants.CREATE_BUTTON);
 		joinButton = new JButton(Constants.JOIN_BUTTON);
 		cancelButton = new JButton(Constants.CANCEL_BUTTON);
@@ -132,8 +159,8 @@ public class Room extends JPanel {
 		cancelButton.setEnabled(false);
 		
 		createButton.addActionListener(new CreateButtonActionListener());
-		cancelButton.addActionListener(new CancelButtonActionListener());
 		joinButton.addActionListener(new JoinButtonActionListener());
+		cancelButton.addActionListener(new CancelButtonActionListener());
 		
 		ComponentUtils.setCustomButton(createButton);
 		ComponentUtils.setCustomButton(joinButton);
@@ -144,18 +171,25 @@ public class Room extends JPanel {
 		buttonContainer.add(joinButton);
 		buttonContainer.add(cancelButton);
 		
-		list.setModel(roomListModel);
+		return buttonContainer;
+	}
+	
+	private void initRoomVersus() {
+		final JScrollPane scrollPane = new JScrollPane();
+		listVersus = new JList(new DataListModel());
 		
-		ComponentUtils.setSize(scrollPane, 140, 90);
-		scrollPane.setViewportView(list);
-
-		ComponentUtils.setPanelBorder(this, roomName);
+		scrollPane.setViewportView(listVersus);
+		ComponentUtils.setBorderMargin(scrollPane, new EmptyBorder(5, 0, 0, 0));
+		
 		add(scrollPane);
-		add(buttonContainer);
 	}
 	
 	public JList getList() {
 		return list;
+	}
+	
+	public JList getListVersus() {
+		return listVersus;
 	}
 	
 }

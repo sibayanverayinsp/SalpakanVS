@@ -1,10 +1,12 @@
 package com.salpakan.ui.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -28,8 +30,8 @@ public class GameLobbyView extends JPanel implements ActionListener {
 	private JTextArea logsArea;
 	
 	private Room defaultRoom;
-	private Room showCapturedRoom;
 	private Room showEngagedRoom;
+	private Room showCapturedRoom;
 	private Room theBattlefieldRoom;
 	private DataListModel playersListModel;
 	
@@ -68,6 +70,7 @@ public class GameLobbyView extends JPanel implements ActionListener {
 		
 		ComponentUtils.setSize(scrollPane, 180, 310);
 		scrollPane.setViewportView(playersList);
+		scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		ComponentUtils.setSize(playersPanel, Constants.WINDOW_WIDTH / 5, 0);
 		ComponentUtils.setPanelBorder(playersPanel, Constants.PLAYERS);
@@ -121,6 +124,11 @@ public class GameLobbyView extends JPanel implements ActionListener {
 	public void addGameToRoom(final String message) {
 		final String[] messageArray = message.split("&");
 		((DataListModel) getRoom(messageArray[0]).getList().getModel()).add(messageArray[1]);
+	}
+	
+	public void addGameToRoomVersus(final String username, final String message) {
+		final String[] messageArray = message.split("&");
+		((DataListModel) getRoom(messageArray[0]).getListVersus().getModel()).add(messageArray[1].split(" ")[1] + " vs " + username);
 	}
 	
 	public void addGamesToAllRooms(final String message) {

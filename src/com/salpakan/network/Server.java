@@ -255,6 +255,12 @@ public class Server {
 						broadcast(new Message(Message.GAME_CANCELLED, user, room + "&" + removedGame));
 					}
 					break;
+					
+				case Message.JOIN_GAME:
+					msgArray = msg.split("&");
+					getRoomArrayList(msgArray[0]).remove(msgArray[1]);
+					broadcast(new Message(type, username, msg));
+					break;
 
 				default:
 					broadcast(message);

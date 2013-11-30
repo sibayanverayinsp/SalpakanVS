@@ -128,6 +128,11 @@ public class Client {
 				case Message.ROOM_GAMES_LOGIN:
 					lobby.addGamesToAllRooms(message.getMessage());
 					break;
+					
+				case Message.JOIN_GAME:
+					lobby.removeGameFromRoom(message.getMessage());
+					lobby.addGameToRoomVersus(message.getUsername(), message.getMessage());
+					break;
 
 				default:
 					break;

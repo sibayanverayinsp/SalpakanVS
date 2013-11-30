@@ -65,7 +65,7 @@ public final class Constants {
 	/*
 	 * 		Component Style Stuffs
 	 */
-	public static final EmptyBorder TEXTAREA_PADDING = new EmptyBorder(5, 5, 5, 5);
+	public static final EmptyBorder PADDING = new EmptyBorder(5, 5, 5, 5);
 	public static final EmptyBorder MARGIN = new EmptyBorder(20, 20, 20, 20);
 	public static final Dimension BUTTON_DIMENSION = new Dimension(80, 30);
 	public static final Dimension TEXTFIELD_DIMENSION = new Dimension(200, 30);

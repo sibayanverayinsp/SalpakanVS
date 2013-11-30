@@ -22,12 +22,14 @@ public class App {
 	
 	private boolean isConnected;
 	private boolean isGameCreated;
+	private boolean joinedAGame;
 	
 	public App() {
 		me = this;
 		client = null;
 		isConnected = false;
 		isGameCreated = false;
+		joinedAGame = false;
 		mainView = new MainView();
 		mainView.setVisible(true);
 	}
@@ -82,6 +84,10 @@ public class App {
 		return isGameCreated;
 	}
 	
+	public boolean joinedAGame() {
+		return joinedAGame;
+	}
+	
 	public void setClient(final Client client) {
 		this.client = client;
 	}
@@ -92,6 +98,10 @@ public class App {
 	
 	public void setIsGameCreated(final boolean isGameCreated) {
 		this.isGameCreated = isGameCreated;
+	}
+	
+	public void setJoinedAGame(final boolean joinedAGame) {
+		this.joinedAGame = joinedAGame;
 	}
 	
 	public void setPassword(final String password) {
