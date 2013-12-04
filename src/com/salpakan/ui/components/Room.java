@@ -192,4 +192,10 @@ public class Room extends JPanel {
 		return listVersus;
 	}
 	
+	public void resetButtons() {
+		createButton.setEnabled(true);
+		joinButton.setEnabled(true);
+		cancelButton.setEnabled(false);
+	}
+	
 }

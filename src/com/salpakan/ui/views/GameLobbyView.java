@@ -135,6 +135,7 @@ public class GameLobbyView extends JPanel implements ActionListener {
 		final String[] room = message.split(",");
 		String[] roomGames = null;
 		roomGames = room[0].split("&");
+		((DataListModel) defaultRoom.getList().getModel()).clear();
 		for (int i = 0, j = roomGames.length; i < j; i++) {
 			if (roomGames[i].equals(" ")) {
 				break;
@@ -142,6 +143,7 @@ public class GameLobbyView extends JPanel implements ActionListener {
 			((DataListModel) defaultRoom.getList().getModel()).add(roomGames[i]);
 		}
 		roomGames = room[1].split("&");
+		((DataListModel) showEngagedRoom.getList().getModel()).clear();
 		for (int i = 0, j = roomGames.length; i < j; i++) {
 			if (roomGames[i].equals(" ")) {
 				break;
@@ -149,6 +151,7 @@ public class GameLobbyView extends JPanel implements ActionListener {
 			((DataListModel) showEngagedRoom.getList().getModel()).add(roomGames[i]);
 		}
 		roomGames = room[2].split("&");
+		((DataListModel) showCapturedRoom.getList().getModel()).clear();
 		for (int i = 0, j = roomGames.length; i < j; i++) {
 			if (roomGames[i].equals(" ")) {
 				break;
@@ -156,6 +159,7 @@ public class GameLobbyView extends JPanel implements ActionListener {
 			((DataListModel) showCapturedRoom.getList().getModel()).add(roomGames[i]);
 		}
 		roomGames = room[3].split("&");
+		((DataListModel) theBattlefieldRoom.getList().getModel()).clear();
 		for (int i = 0, j = roomGames.length; i < j; i++) {
 			if (roomGames[i].equals(" ")) {
 				break;
@@ -172,6 +176,10 @@ public class GameLobbyView extends JPanel implements ActionListener {
 	public void clearFields() {
 		chatArea.setText("");
 		logsArea.setText("");
+		defaultRoom.resetButtons();
+		showEngagedRoom.resetButtons();
+		showCapturedRoom.resetButtons();
+		theBattlefieldRoom.resetButtons();
 	}
 	
 	private Room getRoom(final String roomName) {
