@@ -31,6 +31,9 @@ public class TabView extends JPanel {
 			final Client client = app.getClient();
 			final String username = app.getUsername();
 			client.sendMessage(new Message(Message.PLAYERS, username, Constants.LOGOUT_BUTTON));
+			if (app.isGameCreated()) {
+				client.sendMessage(new Message(Message.ROOM_GAMES_LOGOUT, username, "update rooms on logout"));
+			}
 			client.sendMessage(new Message(Message.LOGOUT, username, Constants.LOGS_OUT.toLowerCase()));
 			app.clearCredentials();
 			app.getLoginView().clearFields();

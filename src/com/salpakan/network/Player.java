@@ -10,7 +10,7 @@ import com.salpakan.app.App;
 import com.salpakan.constants.Constants;
 import com.salpakan.ui.views.GameLobbyView;
 
-public class Client {
+public class Player {
 
 	private ObjectInputStream inputStream;
 	private ObjectOutputStream outputStream;
@@ -19,7 +19,7 @@ public class Client {
 	private final int port;
 	private Socket socket;
 	
-	public Client(final String host, final int port) {
+	public Player(final String host, final int port) {
 		this.host = host;
 		this.port = port;
 	}
@@ -43,7 +43,7 @@ public class Client {
 			return false;
 		}
 		
-		new ListenFromServer().start();
+		new ListenFromGameServer().start();
 		
 		try {
 			outputStream.writeObject(App.getInstance().getUsername());
@@ -78,12 +78,12 @@ public class Client {
 		}
 	}
 	
-	private final class ListenFromServer extends Thread {
+	private final class ListenFromGameServer extends Thread {
 		
 		private Message message;
 		private final GameLobbyView lobby;
 		
-		private ListenFromServer() {
+		private ListenFromGameServer() {
 			lobby = App.getInstance().getLobby();
 		}
 		
@@ -100,38 +100,8 @@ public class Client {
 				}
 				
 				switch (message.getType()) {
-				case Message.CHAT:
-					lobby.appendChat(message.getUsername() + ": " + message.getMessage());
-					break;
-					
 				case Message.LOGOUT:
 					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
-					break;
-					
-				case Message.LOGIN:
-					lobby.appendLog(message.getDate() + ": " + message.getUsername() + " " + message.getMessage());
-					break;
-					
-				case Message.PLAYERS:
-					lobby.refreshPlayersList(message.getMessage());
-					break;
-					
-				case Message.GAME_CREATED:
-					lobby.addGameToRoom(message.getMessage());
-					break;
-					
-				case Message.GAME_CANCELLED:
-				case Message.ROOM_GAMES_LOGOUT:
-					lobby.removeGameFromRoom(message.getMessage());
-					break;
-					
-				case Message.ROOM_GAMES_LOGIN:
-					lobby.addGamesToAllRooms(message.getMessage());
-					break;
-					
-				case Message.JOIN_GAME:
-					lobby.removeGameFromRoom(message.getMessage());
-					lobby.addGameToRoomVersus(message.getUsername(), message.getMessage());
 					break;
 
 				default:

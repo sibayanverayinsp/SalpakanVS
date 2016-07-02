@@ -25,51 +25,7 @@ import com.salpakan.network.Message;
 import com.salpakan.utils.ComponentUtils;
 
 @SuppressWarnings("serial")
-public class LoginView extends JPanel {
-
-	private final class LoginActionListener implements ActionListener {
-		@Override
-		public void actionPerformed(final ActionEvent evt) {
-			final App app = App.getInstance();
-			final String user = username.getText().trim();
-			final char[] passChar = password.getPassword();
-			String pass = "";
-			
-			for (int i = 0; i < passChar.length; i++) {
-				pass += passChar[i];
-			}
-			pass = pass.trim();
-			
-			if (user.length() == 0 || pass.length() == 0) {
-				app.alertError(Constants.FIELDS_REQUIRED);
-				password.setText("");
-				return;
-			} else if (user.contains("&")) {
-				app.alertError(Constants.CANNOT_CONTAIN);
-				password.setText("");
-				return;
-			}
-			
-			final JPanel mainPanel = app.getMainPanel();
-			final String host = JOptionPane.showInputDialog(LoginView.this, "Please enter host address: ", "", JOptionPane.QUESTION_MESSAGE);
-			app.setUsername(user);
-			app.setPassword(pass);
-			
-			if (host == null || host.trim().length() == 0) {
-				return;
-			}
-			
-			app.setClient(new Client(host, Constants.DEFAULT_PORT));
-			
-			if (!app.getClient().start()) {
-				return;
-			}
-			
-			app.setIsConnected(true);
-			app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), Constants.LOGIN_BUTTON));
-			((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
-		}
-	}
+public class LoginView extends JPanel implements ActionListener {
 
 	private JPanel loginPanel;
 	private JTextField username;
@@ -106,7 +62,9 @@ public class LoginView extends JPanel {
 		ComponentUtils.setCustomTextField(password);
 		ComponentUtils.setCustomButton(loginButton);
 		
-		loginButton.addActionListener(new LoginActionListener());
+		username.addActionListener(this);
+		password.addActionListener(this);
+		loginButton.addActionListener(this);
 		
 		//init login panel
 		ComponentUtils.setSize(loginPanel, 350, 250);
@@ -137,6 +95,50 @@ public class LoginView extends JPanel {
 	public void clearFields() {
 		username.setText("");
 		password.setText("");
+	}
+
+	@Override
+	public void actionPerformed(final ActionEvent evt) {
+		final App app = App.getInstance();
+		final String user = username.getText().trim();
+		final char[] passChar = password.getPassword();
+		String pass = "";
+		
+		for (int i = 0; i < passChar.length; i++) {
+			pass += passChar[i];
+		}
+		pass = pass.trim();
+		
+		if (user.length() == 0 || pass.length() == 0) {
+			app.alertError(Constants.FIELDS_REQUIRED);
+			password.setText("");
+			return;
+		} else if (user.contains("&")) {
+			app.alertError(Constants.CANNOT_CONTAIN);
+			password.setText("");
+			return;
+		}
+		
+		final JPanel mainPanel = app.getMainPanel();
+		final String host = (String) JOptionPane.showInputDialog(LoginView.this, "Please enter host address: ", "", JOptionPane.QUESTION_MESSAGE, null, null, "localhost");
+		app.setUsername(user);
+		app.setPassword(pass);
+		
+		if (host == null || host.trim().length() == 0) {
+			return;
+		}
+		
+		app.setClient(new Client(host, Constants.DEFAULT_PORT));
+		
+		if (!app.getClient().start()) {
+			return;
+		}
+		
+		app.setIsConnected(true);
+		app.setIsGameCreated(false);
+		app.getClient().sendMessage(new Message(Message.PLAYERS, app.getUsername(), Constants.LOGIN_BUTTON));
+		app.getClient().sendMessage(new Message(Message.ROOM_GAMES_LOGIN, app.getUsername(), "get room games"));
+		((CardLayout) mainPanel.getLayout()).show(mainPanel, Constants.TABS);
 	}
 	
 }

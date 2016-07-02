@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
@@ -18,12 +19,16 @@ import com.salpakan.constants.Constants;
 
 public class ComponentUtils {
 	
+	public static void setBorderMargin(final JComponent component, final EmptyBorder margin) {
+		component.setBorder(BorderFactory.createCompoundBorder(margin, new LineBorder(Color.BLACK)));
+	}
+	
 	public static void setCustomButton(final JButton button) {
 		setSize(button, Constants.BUTTON_DIMENSION);
 	}
 	
 	public static void setCustomTextArea(final JTextArea textarea) {
-		setPaddedBorder(textarea);
+		setPaddedBorder(textarea, Constants.PADDING);
 		textarea.setEditable(false);
 		textarea.setFocusable(false);
 		textarea.setFont(Constants.FONT);
@@ -35,8 +40,12 @@ public class ComponentUtils {
 		textfield.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 15));
 	}
 	
-	public static void setPaddedBorder(final JComponent component) {
-		component.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.GRAY), Constants.TEXTAREA_PADDING));
+	public static void setPaddedBorder(final JComponent component, final EmptyBorder padding) {
+		component.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.GRAY), padding));
+	}
+	
+	public static void setPaddedPanelBorder(final JComponent component, final String title) {
+		component.setBorder(BorderFactory.createCompoundBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED), title.toUpperCase()) , Constants.PADDING));
 	}
 	
 	public static void setPanelBorder(final JComponent component, final String title) {

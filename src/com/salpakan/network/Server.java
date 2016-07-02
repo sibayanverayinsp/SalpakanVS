@@ -16,6 +16,10 @@ public class Server {
 	private static int uniqueID;
 	
 	private ArrayList<ClientThread> clients;
+	private ArrayList<String> defaultRoomGames;
+	private ArrayList<String> showEngagedRoomGames;
+	private ArrayList<String> showCapturedRoomGames;
+	private ArrayList<String> theBattlefieldRoomGames;
 	private int port;
 	private AppServer appServer;
 	
@@ -29,6 +33,10 @@ public class Server {
 		this.port = port;
 		this.appServer = appServer;
 		clients = new ArrayList<ClientThread>();
+		defaultRoomGames = new ArrayList<String>();
+		showEngagedRoomGames = new ArrayList<String>();
+		showCapturedRoomGames = new ArrayList<String>();
+		theBattlefieldRoomGames = new ArrayList<String>();
 	}
 	
 	public void start() {
@@ -87,6 +95,21 @@ public class Server {
 		}
 	}
 	
+	private void broadcastToClient(final Message message) {
+		display(message);
+		ClientThread client;
+		for (int i = clients.size(); --i >= 0; ) {
+			client = clients.get(i);
+			if (client.username.equals(message.getUsername())) {
+				if (!client.writeMsg(message)) {
+					clients.remove(i);
+					display(message);
+				}
+				break;
+			}
+		}
+	}
+	
 	private synchronized void remove(final int id) {
 		ClientThread client;
 		for (int i = 0, j = clients.size(); i < j; i++) {
@@ -118,7 +141,7 @@ public class Server {
 				username = (String) inputStream.readObject();
 				
 				broadcast(new Message(Message.LOGIN, username, Constants.LOGS_IN.toLowerCase()));
-				appServer.appendLog("<" + username + "> " + this.socket.getInetAddress().getHostAddress());
+				appServer.appendLog("<" + username + "> " + this.socket.getRemoteSocketAddress());
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 				return;
@@ -132,6 +155,7 @@ public class Server {
 			StringBuffer buffer;
 			String msg;
 			String user;
+			String[] msgArray;
 			Message message;
 			int type;
 			
@@ -147,7 +171,8 @@ public class Server {
 				msg = message.getMessage();
 				type = message.getType();
 				user = message.getUsername();
-				if (type == Message.PLAYERS) {
+				switch (type) {
+				case Message.PLAYERS:
 					buffer = new StringBuffer();
 					for(int i = 0, j = clients.size(); i < j; i++) {
 						client = clients.get(i);
@@ -160,11 +185,90 @@ public class Server {
 						}
 					}
 					broadcast(new Message(type, username, buffer.toString()));
-				} else if (type == Message.LOGOUT) {
+					break;
+					
+				case Message.GAME_CREATED:
+					msgArray = msg.split("&");
+					getRoomArrayList(msgArray[0]).add(msgArray[1]);
+					broadcast(new Message(type, username, msg));
+					break;
+					
+				case Message.ROOM_GAMES_LOGIN:
+					buffer = new StringBuffer();
+					for (int i = 0, j = defaultRoomGames.size(); i < j; i++) {
+						buffer.append(defaultRoomGames.get(i) + "&");
+					}
+					if (defaultRoomGames.size() == 0) {
+						buffer.append(" ");
+					}
+					buffer.append(",");
+					for (int i = 0, j = showEngagedRoomGames.size(); i < j; i++) {
+						buffer.append(showEngagedRoomGames.get(i) + "&");
+					}
+					if (showEngagedRoomGames.size() == 0) {
+						buffer.append(" ");
+					}
+					buffer.append(",");
+					for (int i = 0, j = showCapturedRoomGames.size(); i < j; i++) {
+						buffer.append(showCapturedRoomGames.get(i) + "&");
+					}
+					if (showCapturedRoomGames.size() == 0) {
+						buffer.append(" ");
+					}
+					buffer.append(",");
+					for (int i = 0, j = theBattlefieldRoomGames.size(); i < j; i++) {
+						buffer.append(theBattlefieldRoomGames.get(i) + "&");
+					}
+					if (theBattlefieldRoomGames.size() == 0) {
+						buffer.append(" ");
+					}
+					buffer.append(",");
+					broadcastToClient(new Message(type, user, buffer.toString()));
+					break;
+					
+				case Message.GAME_CANCELLED:
+					msgArray = msg.split("&");
+					getRoomArrayList(msgArray[0]).remove(msgArray[1]);
+					broadcast(new Message(type, username, msg));
+					break;
+					
+				case Message.ROOM_GAMES_LOGOUT:
+					String room = null;
+					String removedGame = null;
+					if ((removedGame = removeFromRoom(defaultRoomGames, user)) == null) {
+						if ((removedGame = removeFromRoom(showEngagedRoomGames, user)) == null) {
+							if ((removedGame = removeFromRoom(showCapturedRoomGames, user)) == null) {
+								if ((removedGame = removeFromRoom(theBattlefieldRoomGames, user)) != null) {
+									room = Constants.BATTLEFIELD;
+								}
+							} else {
+								room = Constants.SHOW_CAPTURED;
+							}
+						} else {
+							room = Constants.SHOW_ENGAGED;
+						}
+					} else {
+						room = Constants.DEFAULT_ROOM;
+					}
+					
+					if (room != null) {
+						broadcast(new Message(Message.GAME_CANCELLED, user, room + "&" + removedGame));
+					}
+					break;
+					
+				case Message.JOIN_GAME:
+					msgArray = msg.split("&");
+					getRoomArrayList(msgArray[0]).remove(msgArray[1]);
+					broadcast(new Message(type, username, msg));
+					break;
+
+				default:
 					broadcast(message);
 					break;
-				} else {
-					broadcast(message);
+				}
+				
+				if (type == Message.LOGOUT) {
+					break;
 				}
 			}
 			remove(id);
@@ -179,6 +283,31 @@ public class Server {
 			} catch (final IOException ioe) {
 				ioe.printStackTrace();
 			}
+		}
+		
+		private ArrayList<String> getRoomArrayList(final String roomName) {
+			if (roomName.equals(Constants.DEFAULT_ROOM)) {
+				return defaultRoomGames;
+			} else if (roomName.equals(Constants.SHOW_ENGAGED)) {
+				return showEngagedRoomGames;
+			} else if (roomName.equals(Constants.SHOW_CAPTURED)) {
+				return showCapturedRoomGames;
+			} else {
+				return theBattlefieldRoomGames;
+			}
+		}
+		
+		private String removeFromRoom(final ArrayList<String> roomGames, final String user) {
+			String username;
+			String removed = null;
+			for (int i = 0, j = roomGames.size(); i < j; i++) {
+				username = roomGames.get(i);
+				if (username.substring(username.indexOf(" ") + 1).equals(user)) {
+					removed = roomGames.remove(i);
+					break;
+				}
+			}
+			return removed;
 		}
 		
 		private boolean writeMsg(final Message message) {
